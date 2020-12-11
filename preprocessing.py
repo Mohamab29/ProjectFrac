@@ -39,6 +39,35 @@ def print_time(s_time, msg):
     print(" --- " + msg + f" in {int(m):02d}:{int(s):02d}  --- ")
 
 
+def load_images(path):
+    """
+     we load the images of the training set or the masks from the data set
+     :returns: training images or masks after loading them
+    """
+    # loading train images or the masks
+    # and checking the right name of the file to write the exception
+    s_time = time()
+    if "masks" in path:
+        folder_name = "masks"
+    elif "images" in path:
+        folder_name = "images"
+    else:
+        folder_name = "Unknown"
+    try:
+        images_names = next(os.walk(path))[2]
+    except FileNotFoundError:
+        print(f"Something went wrong with reading the {folder_name} folder path\n"
+              "Please check that you have entered the right path.")
+    # and now we read each image from the specified folder
+    images = []
+    # reading the train images or the mask images and converting them to grayscale
+    for n, img_name in tqdm(enumerate(images_names), total=len(images_names)):
+        image = cv2.imread(path + img_name, 0)
+        images.append(image)
+    print(s_time, f"done loading images from {folder_name}")
+    return np.asarray(images)
+
+
 def prepare2train():
     """
     this is the main function in this script , eventually it should return all the augmented images and masks to the
