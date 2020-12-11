@@ -1,7 +1,7 @@
 """
 Created on Sun Sep 20 11:10:27 2020
 
-@author: Mohamed nedal abomokh
+@author: Mohamed Nedal Abo-Mokh
 """
 ### importing different libraries
 import cv2
@@ -15,8 +15,8 @@ from skimage.filters import sobel
 from time import time
 
 # We take the path of the masks and the train images
-MASKS_PATH = "dataset/train/masks"
-TRAIN_PATH = "dataset/train/images"
+MASKS_PATH = "dataset/train/masks/"
+TRAIN_PATH = "dataset/train/images/"
 
 
 def calculate_time(start_time):
@@ -36,7 +36,10 @@ def print_time(s_time, msg):
     :param s_time: the stating time just before starting the operation
     """
     m, s = divmod(calculate_time(s_time), 60)
-    print(" --- " + msg + f" in {int(m):02d}:{int(s):02d}  --- ")
+    if s <= 1.0 and m <= 0.0:
+        print(" --- " + msg + f" in less than a second  --- ")
+    else:
+        print(" --- " + msg + f" in {int(m):02d}:{int(s):02d}  --- ")
 
 
 def load_images(path):
@@ -61,10 +64,11 @@ def load_images(path):
     # and now we read each image from the specified folder
     images = []
     # reading the train images or the mask images and converting them to grayscale
+    print(f"Loading images from the {folder_name} folder")
     for n, img_name in tqdm(enumerate(images_names), total=len(images_names)):
         image = cv2.imread(path + img_name, 0)
         images.append(image)
-    print(s_time, f"done loading images from {folder_name}")
+    print_time(s_time, f"done loading images from {folder_name} folder")
     return np.asarray(images)
 
 
@@ -74,5 +78,11 @@ def prepare2train():
     main script
     :returns: Augmented train image and Augmented masks
     """
+    train_images = load_images(TRAIN_PATH)
+    masks = load_images(MASKS_PATH)
 
-    return None
+    return train_images, masks
+
+
+x_train, y_train = prepare2train()
+
