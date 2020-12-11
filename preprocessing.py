@@ -157,16 +157,14 @@ def prepare2train(no_of_iters):
         aug_imgs = aug_imgs[0]
         aug_msks = aug_msks[0]
         for j in range(len(aug_imgs)):
-            img = aug_imgs[j]
-            img = (np.reshape(img, (img.shape[0], img.shape[1])) * 255).astype(np.uint8)
+            img = (aug_imgs[j] * 255).astype(np.uint8)
             train_images.append(img)
-            img = aug_msks[j]
-            img = (np.reshape(img, (img.shape[0], img.shape[1])) * 255).astype(np.uint8)
+
+            img = (aug_msks[j] * 255).astype(np.uint8)
             train_masks.append(img)
         i += 1
         if i == no_of_iters:
             break
     print_time(s_time=start_time, msg="done generating images and masks for training")
     return np.asarray(train_images), np.asarray(train_masks)
-
 
