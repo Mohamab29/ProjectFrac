@@ -3,6 +3,7 @@ from preprocessing import *
 import matplotlib.pyplot as plt
 from keras.models import load_model
 import cv2
+import tensorflow as tf
 
 
 # plot diagnostic learning curves
@@ -48,9 +49,9 @@ def train(no_of_iters):
     history = model.fit(
         x=x_train,
         y=y_train,
-        batch_size=100,
+        batch_size=20,
         verbose=1,
-        epochs=15,
+        epochs=10,
         validation_split=0.1,
     )
     print_time(s_time=start_time, msg="done training the U-net model")
