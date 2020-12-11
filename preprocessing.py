@@ -170,6 +170,3 @@ def prepare2train(no_of_iters):
     return np.asarray(train_images), np.asarray(train_masks)
 
 
-x_train, y_train = prepare2train(40)
-print(x_train.shape)
-print(y_train.shape)
