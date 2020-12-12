@@ -5,6 +5,10 @@ from keras.models import load_model
 import cv2
 import tensorflow as tf
 
+TEST_IMAGES_PATH = './dataset/test/images/'
+TEST_MASKS_PATH = './dataset/test/masks/'
+TEST_PREDS_PATH = './dataset/test/predictions/'
+
 
 # plot diagnostic learning curves
 def summarize_diagnostics(history):
@@ -62,5 +66,54 @@ def train(no_of_iters):
     print_time(s_time=start_time, msg="finished running the script")
 
 
+def test():
+    """
+    We read each image in the test folder and predict a mask for each image
+    """
+    start_time = time()
+    print("Loading the model")
+    model = load_model('Unet.h5')
+    print("Finished Loading the model")
+
+    x_test = load_images(TEST_IMAGES_PATH, resize=True)
+    y_true = load_images(TEST_MASKS_PATH, resize=True)
+
+    print("predicting a mask for each test image")
+    y_pred = model.predict(x=x_test, verbose=1, use_multiprocessing=True)
+    print_time(s_time=start_time, msg="done predicting masks")
+
+    if not os.path.exists(TEST_PREDS_PATH):
+        os.makedirs(TEST_PREDS_PATH)
+
+    print("writing the images to the predictions folder")
+    for i in range(len(y_pred)):
+        image = y_pred[i]
+        image = (np.reshape(image, (desired_size, desired_size)) * 255).astype(np.uint8)
+        cv2.imwrite(TEST_PREDS_PATH + str(i) + ".png", image)
+
+    print_time(s_time=start_time, msg="finished testing and predicting")
+
+
+def enhance_preds(d_size):
+    """
+    :arg d_size: what size we desire to enhance the images to
+    """
+    start_time = time()
+    print("enhancing the prediction images")
+    images = load_images(TEST_PREDS_PATH)
+    kernel = np.ones((5, 5), np.uint8)
+    for i in range(len(images)):
+        img = images[i]
+        img = image_resize(img=img, d_size=d_size)
+        img = np.reshape(img, (d_size, d_size))
+        _, image_result = cv2.threshold(img, 0, 255, cv2.THRESH_BINARY
+                                        | cv2.THRESH_OTSU)
+
+        img = cv2.morphologyEx(img, cv2.MORPH_OPEN, kernel)
+        cv2.imwrite(TEST_PREDS_PATH + str(i) + ".png", img)
+
+    print_time(s_time=start_time, msg="finished writing enhanced prediction ")
+
+
 if __name__ == "__main__":
-    train(40)
+    enhance_preds(680)

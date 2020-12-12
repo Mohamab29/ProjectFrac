@@ -98,9 +98,39 @@ def print_time(s_time, msg):
         print(" --- " + msg + f" in {int(m):02d}:{int(s):02d}  --- ")
 
 
-def load_images(path):
+def image_resize(img, d_size=desired_size):
+    """
+    :arg:the desired size if we want to change it
+    making the padding for each image and then resizing it
+    """
+
+    old_size = img.shape[:2]  # old_size is in (height, width) format
+
+    # taking the ration to the original size
+    ratio = float(d_size) / max(old_size)
+    new_size = tuple([int(x * ratio) for x in old_size])
+
+    # new_size should be in (width, height) format
+
+    img = cv2.resize(img, (new_size[1], new_size[0]))
+
+    delta_w = d_size - new_size[1]
+    delta_h = d_size - new_size[0]
+    top, bottom = delta_h // 2, delta_h - (delta_h // 2)
+    left, right = delta_w // 2, delta_w - (delta_w // 2)
+
+    color = [255, 255, 255]
+    new_img = cv2.copyMakeBorder(img, top, bottom, left, right, cv2.BORDER_CONSTANT,
+                                 value=color)
+
+    return new_img
+
+
+def load_images(path, resize=False):
     """
      we load the images of the training set or the masks from the data set
+     :args resize: if we want to use the resize function
+     :arg path: the path of the folder we want to read the images from
      :returns: training images or masks after loading them
     """
     # loading train images or the masks
@@ -123,6 +153,9 @@ def load_images(path):
     print(f"Loading images from the {folder_name} folder")
     for n, img_name in tqdm(enumerate(images_names), total=len(images_names)):
         image = cv2.imread(path + img_name, 0)
+        if resize:
+            image = image_resize(image)
+
         images.append(image)
     print_time(s_time, f"done loading images from {folder_name} folder")
     return np.asarray(images)
