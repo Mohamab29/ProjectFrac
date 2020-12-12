@@ -94,6 +94,16 @@ def test():
     print_time(s_time=start_time, msg="finished testing and predicting")
 
 
+def contrastStretching(im):
+    b = im.max()
+    a = im.min()
+    # Converting im1 to float.
+    c = im.astype(float)
+    # Contrast stretching transformation.
+    im1 = 255.0 * (c - a) / (b - a + 0.0000001)
+    return im1
+
+
 def enhance_preds(d_size):
     """
     :arg d_size: what size we desire to enhance the images to
@@ -106,6 +116,10 @@ def enhance_preds(d_size):
         img = images[i]
         img = image_resize(img=img, d_size=d_size)
         img = np.reshape(img, (d_size, d_size))
+
+        contrast_image = contrastStretching(img) / 255
+        img = np.round_(contrast_image * 255).astype(np.uint8)
+
         _, image_result = cv2.threshold(img, 0, 255, cv2.THRESH_BINARY
                                         | cv2.THRESH_OTSU)
 
