@@ -75,8 +75,8 @@ def test():
     model = load_model('Unet.h5')
     print("Finished Loading the model")
 
-    x_test = load_images(TEST_IMAGES_PATH, resize=True)
-    y_true = load_images(TEST_MASKS_PATH, resize=True)
+    x_test = load_images(TEST_IMAGES_PATH, re_size=True)
+    y_true = load_images(TEST_MASKS_PATH, re_size=True)
 
     print("predicting a mask for each test image")
     y_pred = model.predict(x=x_test, verbose=1, use_multiprocessing=True)

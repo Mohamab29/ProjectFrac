@@ -126,10 +126,10 @@ def image_resize(img, d_size=desired_size):
     return new_img
 
 
-def load_images(path, resize=False):
+def load_images(path, re_size=False):
     """
      we load the images of the training set or the masks from the data set
-     :args resize: if we want to use the resize function
+     :param re_size:  if we want to use the resize function
      :arg path: the path of the folder we want to read the images from
      :returns: training images or masks after loading them
     """
@@ -153,7 +153,7 @@ def load_images(path, resize=False):
     print(f"Loading images from the {folder_name} folder")
     for n, img_name in tqdm(enumerate(images_names), total=len(images_names)):
         image = cv2.imread(path + img_name, 0)
-        if resize:
+        if re_size:
             image = image_resize(image)
 
         images.append(image)
