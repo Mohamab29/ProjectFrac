@@ -91,7 +91,12 @@ def patch_making(no_of_iters):
     # making patches from each image and mask
     for inx in tqdm(range(len_images), total=len_images):
         images_patches.append(patches_from_(resized_images[inx]))
-        masks_patches.append(patches_from_(resized_masks[inx]))
+        mask = patches_from_(resized_masks[inx])
+        # iterating through each patch of a mask and making it a binary image
+        for i in range(mask.shape[0]):
+            _, thresh = cv2.threshold(mask[i], 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
+            mask[i] = thresh // 255
+        masks_patches.append(mask)
 
     images_patches = np.asarray(images_patches)
     masks_patches = np.asarray(masks_patches)
