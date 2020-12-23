@@ -114,7 +114,7 @@ def test():
     unpatched_pred = unpatchify(y_pred, (1024, 1024))
 
     _, image_pred = cv2.threshold(unpatched_pred, 0, 255, cv2.THRESH_BINARY
-                                    | cv2.THRESH_OTSU)
+                                  | cv2.THRESH_OTSU)
     cv2.imwrite(TEST_PREDS_PATH + str(0) + ".png", image_pred)
 
     plt.subplot(131), plt.imshow(test_images[random_index], cmap='gray'), plt.title('Original Image')
