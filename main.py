@@ -62,13 +62,13 @@ def train(no_of_iters):
         y=y_train,
         batch_size=10,
         verbose=1,
-        epochs=15,
+        epochs=10,
         validation_split=0.1,
         callbacks=callbacks
     )
     print_time(s_time=start_time, msg="done training the U-net model")
     print("saving the model")
-    model.save('Unet.h5')
+    model.save('Unet1.h5')
 
     summarize_diagnostics(history)
     print_time(s_time=start_time, msg="finished running the script")
