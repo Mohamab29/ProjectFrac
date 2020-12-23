@@ -4,6 +4,7 @@ import matplotlib.pyplot as plt
 from keras.models import load_model
 import cv2
 from pre_w_patches import patch_making
+import tensorflow as tf
 
 TEST_IMAGES_PATH = './dataset/test/images/'
 TEST_MASKS_PATH = './dataset/test/masks/'
@@ -50,13 +51,20 @@ def train(no_of_iters):
     print("preparing the data for training")
     x_train, y_train = patch_making(no_of_iters)
     print(model.summary())
+    checkpointer = tf.keras.callbacks.ModelCheckpoint('FracUnet.h5', verbose=1, save_best_only=True)
+
+    callbacks = [
+        tf.keras.callbacks.EarlyStopping(patience=2, monitor='val_loss'),
+        tf.keras.callbacks.TensorBoard(log_dir='logs')]
+
     history = model.fit(
         x=x_train,
         y=y_train,
         batch_size=10,
         verbose=1,
-        epochs=10,
+        epochs=15,
         validation_split=0.1,
+        callbacks=callbacks
     )
     print_time(s_time=start_time, msg="done training the U-net model")
     print("saving the model")
@@ -72,13 +80,14 @@ def test():
     """
     start_time = time()
     print("Loading the model")
-    model = load_model('Unet1.h5')
+    model = load_model('Unet.h5')
     print("Finished Loading the model")
 
     x_test = load_images(TEST_IMAGES_PATH, re_size=True)
     y_true = load_images(TEST_MASKS_PATH, re_size=True)
 
     print("predicting a mask for each test image")
+
     y_pred = model.predict(x=x_test, verbose=1, use_multiprocessing=True)
     print_time(s_time=start_time, msg="done predicting masks")
 

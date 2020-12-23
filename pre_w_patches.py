@@ -90,7 +90,7 @@ def patch_making(no_of_iters):
     masks_patches = []
     # making patches from each image and mask
     for inx in tqdm(range(len_images), total=len_images):
-        images_patches.append(patches_from_(resized_images[inx]))
+        images_patches.append(patches_from_(resized_images[inx]) / 255)
         mask = patches_from_(resized_masks[inx])
         # iterating through each patch of a mask and making it a binary image
         for i in range(mask.shape[0]):
