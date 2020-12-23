@@ -6,14 +6,11 @@ Created on Sun Sep 20 11:10:27 2020
 ### importing different libraries
 import cv2
 import numpy as np
-from matplotlib import pyplot as plt
-from scipy.ndimage import label
-from skimage.transform import resize
 from tqdm import tqdm
 import os
-from skimage.filters import sobel
 from time import time
 from keras.preprocessing.image import ImageDataGenerator
+from typing import List, Any
 
 # We take the path of the masks and the train images
 MASKS_PATH = "./dataset/train/masks0"
@@ -102,6 +99,7 @@ def image_resize(img, d_size=desired_size):
     """
     :arg:the desired size if we want to change it
     making the padding for each image and then resizing it
+    :return:the image resized with remaining borders being reflected
     """
 
     old_size = img.shape[:2]  # old_size is in (height, width) format
@@ -119,9 +117,8 @@ def image_resize(img, d_size=desired_size):
     top, bottom = delta_h // 2, delta_h - (delta_h // 2)
     left, right = delta_w // 2, delta_w - (delta_w // 2)
 
-    color = [255, 255, 255]
-    new_img = cv2.copyMakeBorder(img, top, bottom, left, right, cv2.BORDER_CONSTANT,
-                                 value=color)
+    # color = [255, 255, 255]
+    new_img = cv2.copyMakeBorder(img, top, bottom, left, right, cv2.BORDER_REFLECT)
 
     return new_img
 
@@ -135,6 +132,7 @@ def load_images(path, re_size=False):
     """
     # loading train images or the masks
     # and checking the right name of the file to write the exception
+
     s_time = time()
     if "masks" in path:
         folder_name = "masks"
@@ -179,25 +177,34 @@ def prepare2train(no_of_iters):
 
     # we zip each images mask with the image
     generator = my_image_mask_generator(image_gen, mask_gen)
+    train_images, train_masks = generate_from_(gen=generator, noi=no_of_iters)
+    print_time(s_time=start_time, msg="done generating images and masks for training")
+    return train_images, train_masks
 
-    train_images = []
-    train_masks = []
-    i = 0
+
+def generate_from_(gen, noi):
+    """
+    :param gen: this is an augmentation generator that generates batch size augmentations for the masks
+     and images at an iteration
+    :param noi: in the main loop we want to iterate no_of_iters times and at each iteration we create
+    batch_size images.
+    :returns:
+    """
+    train_images: List[Any] = []
+    train_masks: List[Any] = []
     # in this loop we generate batch_size*no_of_iters augmented images and masks
     print("creating the images and masks from the generators")
-    for iters, data in enumerate(generator):
-        aug_imgs, aug_msks = data
-        aug_imgs = aug_imgs[0]
-        aug_msks = aug_msks[0]
-        for j in range(len(aug_imgs)):
-            img = aug_imgs[j]
-            train_images.append(img)
+    for i in tqdm(range(noi), total=noi):
+        start_time = time()
+        for iters, data in enumerate(gen):
+            aug_imgs, aug_msks = data
+            aug_imgs = aug_imgs[0]
+            aug_msks = aug_msks[0]
+            for j in range(len(aug_imgs)):
+                img = aug_imgs[j]
+                train_images.append(img)
 
-            img = aug_msks[j]
-            train_masks.append(img)
-        i += 1
-        if i == no_of_iters:
-            break
-    print_time(s_time=start_time, msg="done generating images and masks for training")
-
+                img = aug_msks[j]
+                train_masks.append(img)
+        print_time(s_time=start_time, msg=f"batch number {i+1} has been generated")
     return np.asarray(train_images), np.asarray(train_masks)

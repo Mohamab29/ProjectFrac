@@ -3,7 +3,7 @@ from preprocessing import *
 import matplotlib.pyplot as plt
 from keras.models import load_model
 import cv2
-import tensorflow as tf
+from pre_w_patches import patch_making
 
 TEST_IMAGES_PATH = './dataset/test/images/'
 TEST_MASKS_PATH = './dataset/test/masks/'
@@ -48,12 +48,12 @@ def train(no_of_iters):
     print("loading the model")
     model = unet(input_size=(desired_size, desired_size, 1))
     print("preparing the data for training")
-    x_train, y_train = prepare2train(no_of_iters)
+    x_train, y_train = patch_making(no_of_iters)
     print(model.summary())
     history = model.fit(
         x=x_train,
         y=y_train,
-        batch_size=20,
+        batch_size=10,
         verbose=1,
         epochs=10,
         validation_split=0.1,
@@ -72,7 +72,7 @@ def test():
     """
     start_time = time()
     print("Loading the model")
-    model = load_model('Unet.h5')
+    model = load_model('Unet1.h5')
     print("Finished Loading the model")
 
     x_test = load_images(TEST_IMAGES_PATH, re_size=True)
@@ -130,4 +130,4 @@ def enhance_preds(d_size):
 
 
 if __name__ == "__main__":
-    enhance_preds(680)
+    train(20)
