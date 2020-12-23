@@ -147,6 +147,7 @@ def load_images(path, re_size=False):
               "Please check that you have entered the right path.")
     # and now we read each image from the specified folder
     images = []
+    images_names.sort()
     # reading the train images or the mask images and converting them to grayscale
     print(f"Loading images from the {folder_name} folder")
     for n, img_name in tqdm(enumerate(images_names), total=len(images_names)):
@@ -206,5 +207,5 @@ def generate_from_(gen, noi):
 
                 img = aug_msks[j]
                 train_masks.append(img)
-        print_time(s_time=start_time, msg=f"batch number {i+1} has been generated")
+        print_time(s_time=start_time, msg=f"batch number {i + 1} has been generated")
     return np.asarray(train_images), np.asarray(train_masks)

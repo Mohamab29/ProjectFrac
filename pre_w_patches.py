@@ -1,4 +1,4 @@
-from patchify import patchify, unpatchify
+from patchify import patchify
 from preprocessing import *
 
 # We take the path of the masks and the train images

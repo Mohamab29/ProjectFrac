@@ -3,8 +3,10 @@ from preprocessing import *
 import matplotlib.pyplot as plt
 from keras.models import load_model
 import cv2
-from pre_w_patches import patch_making
+from pre_w_patches import patches_from_, patch_making
 import tensorflow as tf
+import random
+from patchify import unpatchify
 
 TEST_IMAGES_PATH = './dataset/test/images/'
 TEST_MASKS_PATH = './dataset/test/masks/'
@@ -82,24 +84,46 @@ def test():
     print("Loading the model")
     model = load_model('Unet.h5')
     print("Finished Loading the model")
+    random_index = random.randint(0, 4)
+    test_images = load_images(TEST_IMAGES_PATH)
+    test_masks = load_images(TEST_MASKS_PATH)
 
-    x_test = load_images(TEST_IMAGES_PATH, re_size=True)
-    y_true = load_images(TEST_MASKS_PATH, re_size=True)
+    print("predicting a mask for a test image")
+    image = image_resize(test_images[random_index], d_size=1024)
+    mask = image_resize(test_masks[random_index], d_size=1024)
 
-    print("predicting a mask for each test image")
+    # making a patches for random image
+    image_patched = patches_from_(image)
+    image_patched = np.reshape(image_patched, (49, 256, 256, 1))
 
-    y_pred = model.predict(x=x_test, verbose=1, use_multiprocessing=True)
-    print_time(s_time=start_time, msg="done predicting masks")
+    # we use a 4-d shape because that's what our model takes
+    y_pred = np.zeros((49, 256, 256, 1))
+
+    # we predict a mask for each patch
+
+    y_pred = model.predict(x=image_patched, verbose=1, use_multiprocessing=True)
+
+    print_time(s_time=start_time, msg="done predicting mask")
 
     if not os.path.exists(TEST_PREDS_PATH):
         os.makedirs(TEST_PREDS_PATH)
 
+    # unpatchifying that predictions into one image
     print("writing the images to the predictions folder")
-    for i in range(len(y_pred)):
-        image = y_pred[i]
-        image = (np.reshape(image, (desired_size, desired_size)) * 255).astype(np.uint8)
-        cv2.imwrite(TEST_PREDS_PATH + str(i) + ".png", image)
+    y_pred = (np.reshape(y_pred, (7, 7, 256, 256)) * 255).astype(np.uint8)
+    unpatched_pred = unpatchify(y_pred, (1024, 1024))
 
+    _, image_pred = cv2.threshold(unpatched_pred, 0, 255, cv2.THRESH_BINARY
+                                    | cv2.THRESH_OTSU)
+    cv2.imwrite(TEST_PREDS_PATH + str(0) + ".png", image_pred)
+
+    plt.subplot(131), plt.imshow(test_images[random_index], cmap='gray'), plt.title('Original Image')
+    plt.xticks([]), plt.yticks([])
+    plt.subplot(132), plt.imshow(image_pred, cmap='gray'), plt.title('prediction')
+    plt.xticks([]), plt.yticks([])
+    plt.subplot(133), plt.imshow(test_masks[random_index], cmap='gray'), plt.title('Mask')
+    plt.xticks([]), plt.yticks([])
+    plt.show()
     print_time(s_time=start_time, msg="finished testing and predicting")
 
 
@@ -138,5 +162,9 @@ def enhance_preds(d_size):
     print_time(s_time=start_time, msg="finished writing enhanced prediction ")
 
 
+"""
+
+
+"""
 if __name__ == "__main__":
-    train(20)
+    test()
