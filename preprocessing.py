@@ -117,8 +117,8 @@ def image_resize(img, d_size=desired_size):
     top, bottom = delta_h // 2, delta_h - (delta_h // 2)
     left, right = delta_w // 2, delta_w - (delta_w // 2)
 
-    # color = [255, 255, 255]
-    new_img = cv2.copyMakeBorder(img, top, bottom, left, right, cv2.BORDER_REFLECT)
+    color = [0, 0, 0]
+    new_img = cv2.copyMakeBorder(img, top, bottom, left, right, cv2.BORDER_CONSTANT,value=color)
 
     return new_img
 

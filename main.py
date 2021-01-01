@@ -3,10 +3,11 @@ from preprocessing import *
 import matplotlib.pyplot as plt
 from keras.models import load_model
 import cv2
-from pre_w_patches import patches_from_, patch_making
 import tensorflow as tf
 import random
 from patchify import unpatchify
+from skimage.util.shape import view_as_windows
+from pre_w_patches import patch_making
 
 TEST_IMAGES_PATH = './dataset/test/images/'
 TEST_MASKS_PATH = './dataset/test/masks/'
@@ -70,10 +71,16 @@ def train(no_of_iters):
     )
     print_time(s_time=start_time, msg="done training the U-net model")
     print("saving the model")
-    model.save('Unet1.h5')
+    model.save('Unet.h5')
 
     summarize_diagnostics(history)
     print_time(s_time=start_time, msg="finished running the script")
+
+
+def crop_image(img):
+    # cropping black borders from a given image
+    mask = img > 0
+    return img[np.ix_(mask.any(1), mask.any(0))], mask
 
 
 def test():
@@ -88,20 +95,30 @@ def test():
     test_images = load_images(TEST_IMAGES_PATH)
     test_masks = load_images(TEST_MASKS_PATH)
 
-    print("predicting a mask for a test image")
+    print(f"predicting a mask for a test image with index {random_index}")
+
     image = image_resize(test_images[random_index], d_size=1024)
     mask = image_resize(test_masks[random_index], d_size=1024)
 
-    # making a patches for random image
-    image_patched = patches_from_(image)
-    image_patched = np.reshape(image_patched, (49, 256, 256, 1))
+    # splinting an image into (4,4,256,256) => meaning we will have 16 images each is (256,256)
+    split_images = view_as_windows(image, window_shape=(256, 256), step=256)
 
     # we use a 4-d shape because that's what our model takes
-    y_pred = np.zeros((49, 256, 256, 1))
+
+    split_images = np.reshape(split_images, (16, 256, 256, 1))
+    y_pred = np.zeros((16, 256, 256, 1))
 
     # we predict a mask for each patch
 
-    y_pred = model.predict(x=image_patched, verbose=1, use_multiprocessing=True)
+    y_pred = model.predict(x=split_images, verbose=1, use_multiprocessing=True)
+
+    y_pred = np.reshape(y_pred,(4, 4, 256, 256))
+
+    pred = np.zeros((1024, 1024))
+    h, w = 256, 256
+    for i in range(y_pred.shape[0]):
+        for j in range(y_pred.shape[1]):
+            pred[i * h:(i + 1) * h, j * w:(j + 1) * w] = y_pred[i][j]
 
     print_time(s_time=start_time, msg="done predicting mask")
 
@@ -110,10 +127,8 @@ def test():
 
     # unpatchifying that predictions into one image
     print("writing the images to the predictions folder")
-    y_pred = (np.reshape(y_pred, (7, 7, 256, 256)) * 255).astype(np.uint8)
-    unpatched_pred = unpatchify(y_pred, (1024, 1024))
-
-    _, image_pred = cv2.threshold(unpatched_pred, 0, 255, cv2.THRESH_BINARY
+    pred = (pred*255).astype(np.uint8)
+    _, image_pred = cv2.threshold(pred, 0, 255, cv2.THRESH_BINARY
                                   | cv2.THRESH_OTSU)
     cv2.imwrite(TEST_PREDS_PATH + str(0) + ".png", image_pred)
 
@@ -162,9 +177,5 @@ def enhance_preds(d_size):
     print_time(s_time=start_time, msg="finished writing enhanced prediction ")
 
 
-"""
-
-
-"""
 if __name__ == "__main__":
     test()
