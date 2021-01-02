@@ -131,6 +131,8 @@ def test():
     pred = (pred * 255).astype(np.uint8)
     _, image_pred = cv2.threshold(pred, 0, 255, cv2.THRESH_BINARY
                                   | cv2.THRESH_OTSU)
+    kernel = np.ones((3, 3), np.uint8)
+    image_pred = cv2.morphologyEx(image_pred, cv2.MORPH_CLOSE, kernel)
     cv2.imwrite(TEST_PREDS_PATH + str(0) + ".png", image_pred)
 
     plt.subplot(131), plt.imshow(test_images[random_index], cmap='gray'), plt.title('Original Image')
@@ -179,4 +181,4 @@ def enhance_preds(d_size):
 
 
 if __name__ == "__main__":
-    train(30)
+    test()
