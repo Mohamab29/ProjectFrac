@@ -81,7 +81,7 @@ def train(no_of_iters):
 def crop_image(img):
     # cropping black borders from a given image
     mask = img > 0
-    return img[np.ix_(mask.any(1), mask.any(0))], mask
+    return img[np.ix_(mask.any(1), mask.any(0))]
 
 
 def test():
@@ -131,8 +131,9 @@ def test():
     pred = (pred * 255).astype(np.uint8)
     _, image_pred = cv2.threshold(pred, 0, 255, cv2.THRESH_BINARY
                                   | cv2.THRESH_OTSU)
-    kernel = np.ones((3, 3), np.uint8)
-    image_pred = cv2.morphologyEx(image_pred, cv2.MORPH_CLOSE, kernel)
+    # kernel = np.ones((3, 3), np.uint8)
+    # image_pred = cv2.morphologyEx(image_pred, cv2.MORPH_CLOSE, kernel)
+    image_pred = crop_image(image_pred)
     cv2.imwrite(TEST_PREDS_PATH + str(0) + ".png", image_pred)
 
     plt.subplot(131), plt.imshow(test_images[random_index], cmap='gray'), plt.title('Original Image')
@@ -141,6 +142,7 @@ def test():
     plt.xticks([]), plt.yticks([])
     plt.subplot(133), plt.imshow(test_masks[random_index], cmap='gray'), plt.title('Mask')
     plt.xticks([]), plt.yticks([])
+    plt.figure(figsize=(20,10))
     plt.show()
     print_time(s_time=start_time, msg="finished testing and predicting")
 
@@ -174,7 +176,7 @@ def enhance_preds(d_size):
         _, image_result = cv2.threshold(img, 0, 255, cv2.THRESH_BINARY
                                         | cv2.THRESH_OTSU)
 
-        img = cv2.morphologyEx(img, cv2.MORPH_OPEN, kernel)
+        img = cv2.morphologyEx(img, cv2.MORPH_CLOSE, kernel)
         cv2.imwrite(TEST_PREDS_PATH + str(i) + ".png", img)
 
     print_time(s_time=start_time, msg="finished writing enhanced prediction ")
