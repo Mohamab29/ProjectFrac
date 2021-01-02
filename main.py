@@ -21,26 +21,27 @@ def summarize_diagnostics(history):
     :arg history:the model and it's history basically
     """
     f, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 4))
-    t = f.suptitle('CNN Performance', fontsize=12)
+    t = f.suptitle('Unet model Performance', fontsize=12)
     f.subplots_adjust(top=0.85, wspace=0.3)
 
     max_epoch = len(history.history['accuracy']) + 1
     epoch_list = list(range(1, max_epoch))
     ax1.plot(epoch_list, history.history['accuracy'], label='Train Accuracy')
     ax1.plot(epoch_list, history.history['val_accuracy'], label='Validation Accuracy')
-    ax1.set_xticks(np.arange(1, max_epoch, 5))
+    ax1.set_xticks(np.arange(1, max_epoch, 2))
     ax1.set_ylabel('Accuracy Value')
     ax1.set_xlabel('Epoch')
     ax1.set_title('Accuracy')
-    l1 = ax1.legend(loc="best")
+    ax1.legend(loc="best")
 
     ax2.plot(epoch_list, history.history['loss'], label='Train Loss')
     ax2.plot(epoch_list, history.history['val_loss'], label='Validation Loss')
-    ax2.set_xticks(np.arange(1, max_epoch, 5))
+    ax2.set_xticks(np.arange(1, max_epoch, 2))
     ax2.set_ylabel('Loss Value')
     ax2.set_xlabel('Epoch')
     ax2.set_title('Loss')
-    l2 = ax2.legend(loc="best")
+    ax2.legend(loc="best")
+    ax2.figure.savefig('accuracy-loss.png')
 
 
 def train(no_of_iters):
@@ -63,7 +64,7 @@ def train(no_of_iters):
     history = model.fit(
         x=x_train,
         y=y_train,
-        batch_size=10,
+        batch_size=15,
         verbose=1,
         epochs=10,
         validation_split=0.1,
@@ -112,7 +113,7 @@ def test():
 
     y_pred = model.predict(x=split_images, verbose=1, use_multiprocessing=True)
 
-    y_pred = np.reshape(y_pred,(4, 4, 256, 256))
+    y_pred = np.reshape(y_pred, (4, 4, 256, 256))
 
     pred = np.zeros((1024, 1024))
     h, w = 256, 256
@@ -127,7 +128,7 @@ def test():
 
     # unpatchifying that predictions into one image
     print("writing the images to the predictions folder")
-    pred = (pred*255).astype(np.uint8)
+    pred = (pred * 255).astype(np.uint8)
     _, image_pred = cv2.threshold(pred, 0, 255, cv2.THRESH_BINARY
                                   | cv2.THRESH_OTSU)
     cv2.imwrite(TEST_PREDS_PATH + str(0) + ".png", image_pred)
@@ -178,4 +179,4 @@ def enhance_preds(d_size):
 
 
 if __name__ == "__main__":
-    test()
+    train(30)
