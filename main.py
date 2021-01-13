@@ -142,7 +142,7 @@ def test():
     plt.xticks([]), plt.yticks([])
     plt.subplot(133), plt.imshow(test_masks[random_index], cmap='gray'), plt.title('Mask')
     plt.xticks([]), plt.yticks([])
-    plt.figure(figsize=(20,10))
+    plt.figure(figsize=(20, 10))
     plt.show()
     print_time(s_time=start_time, msg="finished testing and predicting")
 
