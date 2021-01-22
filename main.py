@@ -14,6 +14,19 @@ TEST_MASKS_PATH = './dataset/test/masks/'
 TEST_PREDS_PATH = './dataset/test/predictions/'
 
 
+def display(img, title, cmap='gray'):
+    """
+    :arg img:an image we want to display
+    :type title: str
+    :arg cmap: using grayscale colo map to show gray scale images
+    """
+    fig = plt.figure(figsize=(10, 8))
+    ax = fig.add_subplot(111)
+    plt.title(title)
+    ax.imshow(img, cmap=cmap)
+    plt.show()
+
+
 # plot diagnostic learning curves
 def summarize_diagnostics(history):
     """
@@ -136,14 +149,10 @@ def test():
     image_pred = crop_image(image_pred)
     cv2.imwrite(TEST_PREDS_PATH + str(0) + ".png", image_pred)
 
-    plt.subplot(131), plt.imshow(test_images[random_index], cmap='gray'), plt.title('Original Image')
-    plt.xticks([]), plt.yticks([])
-    plt.subplot(132), plt.imshow(image_pred, cmap='gray'), plt.title('prediction')
-    plt.xticks([]), plt.yticks([])
-    plt.subplot(133), plt.imshow(test_masks[random_index], cmap='gray'), plt.title('Mask')
-    plt.xticks([]), plt.yticks([])
-    plt.figure(figsize=(20,10))
-    plt.show()
+    display(test_images[random_index], 'Original Image')
+    display(test_masks[random_index], 'Ground truth Mask')
+    display(image_pred, 'Prediction')
+
     print_time(s_time=start_time, msg="finished testing and predicting")
 
 
