@@ -4,6 +4,7 @@ from keras.optimizers import Adam
 
 
 def unet(pretrained_weights=None, input_size=(256, 256, 1)):
+    # padding='same' - convolution (or pooling) with a stride=1, produce output of the same size as the input.
     inputs = Input(input_size)
     conv1 = Conv2D(64, 3, activation='relu', padding='same', kernel_initializer='he_normal')(inputs)
     conv1 = Conv2D(64, 3, activation='relu', padding='same', kernel_initializer='he_normal')(conv1)

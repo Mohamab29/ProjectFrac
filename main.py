@@ -149,10 +149,21 @@ def test():
     image_pred = crop_image(image_pred)
     cv2.imwrite(TEST_PREDS_PATH + str(0) + ".png", image_pred)
 
+
     display(test_images[random_index], 'Original Image')
     display(test_masks[random_index], 'Ground truth Mask')
     display(image_pred, 'Prediction')
 
+    """
+    plt.subplot(131), plt.imshow(test_images[random_index], cmap='gray'), plt.title('Original Image')
+    plt.xticks([]), plt.yticks([])
+    plt.subplot(132), plt.imshow(image_pred, cmap='gray'), plt.title('prediction')
+    plt.xticks([]), plt.yticks([])
+    plt.subplot(133), plt.imshow(test_masks[random_index], cmap='gray'), plt.title('Mask')
+    plt.xticks([]), plt.yticks([])
+    plt.figure(figsize=(20, 10))
+    plt.show()
+    """
     print_time(s_time=start_time, msg="finished testing and predicting")
 
 
