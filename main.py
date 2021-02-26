@@ -149,7 +149,6 @@ def test():
     image_pred = crop_image(image_pred)
     cv2.imwrite(TEST_PREDS_PATH + str(0) + ".png", image_pred)
 
-
     display(test_images[random_index], 'Original Image')
     display(test_masks[random_index], 'Ground truth Mask')
     display(image_pred, 'Prediction')
@@ -203,4 +202,4 @@ def enhance_preds(d_size):
 
 
 if __name__ == "__main__":
-    test()
+    train(50)
