@@ -202,4 +202,4 @@ def enhance_preds(d_size):
 
 
 if __name__ == "__main__":
-    train(50)
+    test()
