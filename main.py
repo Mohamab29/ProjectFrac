@@ -4,7 +4,6 @@ from keras.models import load_model
 import cv2
 import tensorflow as tf
 import random
-from patchify import unpatchify
 from skimage.util.shape import view_as_windows
 from patchify_and_augment import patch_making
 

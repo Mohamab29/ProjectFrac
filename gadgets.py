@@ -41,3 +41,4 @@ def display(img, title, cmap='gray'):
     plt.title(title)
     ax.imshow(img, cmap=cmap)
     plt.show()
+

@@ -10,6 +10,7 @@ from tqdm import tqdm
 import os
 from gadgets import *
 
+cv2.g
 # We take the path of the masks and the train images
 MASKS_PATH = "./dataset/train/masks/"
 TRAIN_PATH = "./dataset/train/images/"
