@@ -114,7 +114,7 @@ def test():
     image = image_resize(test_images[random_index], d_size=1024)
     mask = image_resize(test_masks[random_index], d_size=1024)
 
-    # splinting an image into (4,4,256,256) => meaning we will have 16 images each is (256,256)
+    # splitting an image into (4,4,256,256) => meaning we will have 16 images each is (256,256)
     split_images = view_as_windows(image, window_shape=(256, 256), step=256)
 
     # we use a 4-d shape because that's what our model takes

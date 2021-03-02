@@ -24,43 +24,6 @@ def patches_from_(image):
     return np.reshape(patches, (49, 256, 256))
 
 
-def creating_augmented_patches(images, labels):
-    """
-    :arg images: images with shape (number of images , height, width,1) because that's tensor takes
-    :arg labels:or masks . same as the argument image
-    :returns:augmentation generators for the images and labels with same augmentation for each images and it's
-    corresponding masks/label
-    """
-    image_data_generator = ImageDataGenerator(
-        rotation_range=40,
-        width_shift_range=0.2,
-        height_shift_range=0.2,
-        shear_range=0.1,
-        zoom_range=0.1,
-        horizontal_flip=True,
-        fill_mode='reflect',
-        rescale=1 / 255.
-    ).flow(images,
-           batch_size=32,
-           shuffle=False
-           , seed=SEED)
-
-    mask_data_generator = ImageDataGenerator(
-        rotation_range=40,
-        width_shift_range=0.2,
-        height_shift_range=0.2,
-        shear_range=0.1,
-        zoom_range=0.1,
-        horizontal_flip=True,
-        fill_mode='reflect',
-        rescale=1 / 255.
-    ).flow(labels,
-           batch_size=32,
-           shuffle=False
-           , seed=SEED)
-    return image_data_generator, mask_data_generator
-
-
 def patch_making(no_of_iters):
     """
     :arg no_of_iters: in the main loop we want to iterate no_of_iters times and at each iteration we create
