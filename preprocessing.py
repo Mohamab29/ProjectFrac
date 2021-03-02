@@ -8,49 +8,15 @@ import cv2
 import numpy as np
 from tqdm import tqdm
 import os
-from time import time
-import pre_w_patches
+from gadgets import *
 
 # We take the path of the masks and the train images
-MASKS_PATH = "./secdataset/train/masks/"
-TRAIN_PATH = "./secdataset/train/images/"
+MASKS_PATH = "./dataset/train/masks/"
+TRAIN_PATH = "./dataset/train/images/"
 batch_size = 10
 SEED = 42
 # the desired size for an image and a mask for the training model
 desired_size = 256
-
-
-def my_image_mask_generator(image_data_generator, mask_data_generator):
-    """
-    iterating through the sets of images and masks and zip them together so that we can have for each image a fitting
-    label
-    """
-    train_generator = zip(image_data_generator, mask_data_generator)
-    for img, mask in train_generator:
-        yield img, mask
-
-
-def calculate_time(start_time):
-    """
-    calculates the time from start to current time and returns it in secedes
-    :param start_time: this is the time from which we want to calculate how much time has passed since this time
-    :returns:the current time
-    """
-    return round(time() - start_time, 2)
-
-
-def print_time(s_time, msg):
-    """
-    This function prints the time in seconds and minutes, for example it will print "msg" in 3:45 meaning the
-    operation has ended in 3 minutes and 45 seconds
-    :param msg: the msg we want to print the time
-    :param s_time: the stating time just before starting the operation
-    """
-    m, s = divmod(calculate_time(s_time), 60)
-    if s <= 1.0 and m <= 0.0:
-        print(" --- " + msg + f" in less than a second  --- ")
-    else:
-        print(" --- " + msg + f" in {int(m):02d}:{int(s):02d}  --- ")
 
 
 def image_resize(img, d_size=desired_size):

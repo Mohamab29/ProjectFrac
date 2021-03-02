@@ -1,13 +1,6 @@
 from patchify import patchify
 from preprocessing import *
 
-# We take the path of the masks and the train images
-
-MASKS_PATH = "./secdataset/train/masks/"
-TRAIN_PATH = "./secdataset/train/images/"
-batch_size = 10
-SEED = 42
-
 
 # the desired size for an image and a mask for the training model
 

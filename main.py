@@ -1,30 +1,17 @@
 from model import unet
 from preprocessing import *
-import matplotlib.pyplot as plt
 from keras.models import load_model
 import cv2
 import tensorflow as tf
 import random
 from patchify import unpatchify
 from skimage.util.shape import view_as_windows
-from pre_w_patches import patch_making
+from patchify_and_augment import patch_making
+
 
 TEST_IMAGES_PATH = './dataset/test/images/'
 TEST_MASKS_PATH = './dataset/test/masks/'
 TEST_PREDS_PATH = './dataset/test/predictions/'
-
-
-def display(img, title, cmap='gray'):
-    """
-    :arg img:an image we want to display
-    :type title: str
-    :arg cmap: using grayscale colo map to show gray scale images
-    """
-    fig = plt.figure(figsize=(10, 8))
-    ax = fig.add_subplot(111)
-    plt.title(title)
-    ax.imshow(img, cmap=cmap)
-    plt.show()
 
 
 # plot diagnostic learning curves
