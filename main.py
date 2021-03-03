@@ -54,7 +54,7 @@ def train():
 
     print("preparing the data for training")
     x_train, y_train = patch_making()
-    x_train, x_val, y_train, y_val = train_test_split(x_train, y_train, test_size=0.2,random_state=42)
+    x_train, x_val, y_train, y_val = train_test_split(x_train, y_train, test_size=0.2, random_state=42)
 
     print(model.summary())
     checkpointer = tf.keras.callbacks.ModelCheckpoint('FracUnet.h5', verbose=1, save_best_only=True)
@@ -94,7 +94,7 @@ def test():
     print("Loading the model")
     model = load_model('Unet.h5')
     print("Finished Loading the model")
-    random_index = random.randint(0, 4)
+    random_index = 1 # random.randint(0, 4)
     test_images = load_images(TEST_IMAGES_PATH)
     test_masks = load_images(TEST_MASKS_PATH)
 
@@ -133,6 +133,8 @@ def test():
     pred = (pred * 255).astype(np.uint8)
     _, image_pred = cv2.threshold(pred, 0, 255, cv2.THRESH_BINARY
                                   | cv2.THRESH_OTSU)
+    # image_pred = cv2.adaptiveThreshold(pred, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+    #                                    cv2.THRESH_BINARY_INV, 7, 0)
     # kernel = np.ones((3, 3), np.uint8)
     # image_pred = cv2.morphologyEx(image_pred, cv2.MORPH_CLOSE, kernel)
     image_pred = crop_image(image_pred)
@@ -191,4 +193,4 @@ def enhance_preds(d_size):
 
 
 if __name__ == "__main__":
-    test()
+    train()

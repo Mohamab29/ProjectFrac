@@ -1,5 +1,8 @@
 from patchify import patchify
 from preprocessing import *
+import random
+from scipy.ndimage.interpolation import map_coordinates
+from scipy.ndimage.filters import gaussian_filter
 
 
 # the desired size for an image and a mask for the training model
@@ -17,6 +20,35 @@ def patches_from_(image):
     return np.reshape(patches, (49, 256, 256))
 
 
+def rotate_image(img, degree):
+    (h, w) = img.shape[:2]
+    (cX, cY) = (w // 2, h // 2)
+    M = cv2.getRotationMatrix2D((cX, cY), degree, 1.0)
+    return cv2.warpAffine(img, M, (w, h))
+
+
+def elastic_transform(image, alpha, sigma, random_state=None):
+    """
+    credits for this code goes to :
+    https://gist.github.com/chsasank/4d8f68caf01f041a6453e67fb30f8f5a
+
+    """
+    assert len(image.shape) == 2
+
+    if random_state is None:
+        random_state = np.random.RandomState(None)
+
+    shape = image.shape
+
+    dx = gaussian_filter((random_state.rand(*shape) * 2 - 1), sigma, mode="constant", cval=0) * alpha
+    dy = gaussian_filter((random_state.rand(*shape) * 2 - 1), sigma, mode="constant", cval=0) * alpha
+
+    x, y = np.meshgrid(np.arange(shape[0]), np.arange(shape[1]), indexing='ij')
+    indices = np.reshape(x + dx, (-1, 1)), np.reshape(y + dy, (-1, 1))
+
+    return map_coordinates(image, indices, order=1).reshape(shape)
+
+
 def threshold_(img):
     """
     :param img: an image that we want to threshold
@@ -26,39 +58,82 @@ def threshold_(img):
     return threshold_img
 
 
-def augment(images, is_mask=False):
+def choose_an_augmentation(num, img):
     """
-    :param is_mask: if we enter masks we don't want to apply blur on them so we don't lose vlaues
-    :param images: is a parameter that will take a numpy array of images and apply on each image a
-    geometric transformation and blurring
-    returns: An array containing augmented and original images
+    :param num: the parameter will take a random INT  which will be between 1-6,
+     and depending on the number , the image will have an augmentation applied to it
+    :param img: An image we want to apply to some form of augmentation .
+    :returns: an augmented image or the image itself without change
+    types of augmentations :
+    Transformation , shearing , elastic deformation ...
     """
-    augmented = []
+    # the elastic transformation takes sigma and alpha which can have different values that will give different shapes
+    switcher = {
+        1: elastic_transform(img, img.shape[1] * 6, img.shape[1] * 0.07),
+        2: elastic_transform(img, img.shape[1] * 5, img.shape[1] * 0.05),
+        3: elastic_transform(img, img.shape[1] * 7, img.shape[1] * 0.07),
+        4: cv2.flip(img, 1),
+        5: cv2.flip(img, -1),
+        6: rotate_image(img, 45),
+        7: rotate_image(img, -90)
+    }
+    return switcher.get(num)
 
-    for img in images:
-        # first the original img
-        augmented.append(img)
-        # we flip the img horizontally and vertically and apply gaussian blur and threshold it, if it is mask .
-        flip_both = cv2.flip(img, -1)
 
-        flip_both = cv2.GaussianBlur(flip_both, (5, 5), 0)
+def choose_(img, mask, rand_num_):
+    """
+    since this is a a code that repeats itself throughout the loop in the augment function , I made it look better
+    by using this function
+    """
+    return choose_an_augmentation(rand_num_, img), choose_an_augmentation(rand_num_, mask)
 
-        if is_mask:
-            flip_both = threshold_(flip_both)
 
-        augmented.append(flip_both.copy())
+def randomize(old_num):
+    """to generate a new random number that isn't the same as the old one"""
+    num = old_num
+    while old_num == num:
+        num = random.randint(1, 7)
+    return num
 
-        # we flip the img horizontally and apply median blur and threshold it, if it is mask .
-        flip_horizontal = cv2.flip(img, 1)
 
-        flip_horizontal = cv2.medianBlur(flip_horizontal, 5)
+def augment(images, masks):
+    """
+    :param images: is a parameter that will take a numpy array of images and apply on each image an augmentation
+    :param masks: is a parameter that will take a numpy array of masks and apply on each masks an augmentation
+    :returns: An array containing augmented and original images
+    We take them both because we want to have the same augmentation on both the image and it's mask ...
+    """
+    # creating lists that will contain all the augmented images and masks
+    augmented_images, augmented_masks = [], []
+    num_of_images = images.shape[0]
+    rand_num = 0
+    for inx in range(num_of_images):
 
-        if is_mask:
-            flip_horizontal = threshold_(flip_horizontal)
+        # first we add the original image and mask
+        augmented_images.append(images[inx])
+        augmented_masks.append(masks[inx])
 
-        augmented.append(flip_horizontal.copy())
+        # first augmentation for them both ,
+        # temp1 = is an augmented image , temp2 = is augmented mask .
+        rand_num = random.randint(1, 7)
+        temp1, temp2 = choose_(images[inx], masks[inx], rand_num_=rand_num)
+        augmented_images.append(temp1)
+        augmented_masks.append(temp2)
 
-    return np.asarray(augmented)
+        # add more images if lucky
+        if rand_num % 2 == 0:
+            rand_num = randomize(rand_num)
+            temp1, temp2 = choose_(images[inx], masks[inx], rand_num_=rand_num)
+            augmented_images.append(temp1)
+            augmented_masks.append(temp2)
+
+        if rand_num % 3 == 0:
+            rand_num = randomize(rand_num)
+            temp1, temp2 = choose_(images[inx], masks[inx], rand_num_=rand_num)
+            augmented_images.append(temp1)
+            augmented_masks.append(temp2)
+
+    return np.asarray(augmented_images), np.asarray(augmented_masks)
 
 
 def patch_making():
@@ -88,8 +163,8 @@ def patch_making():
 
     print_time(start_time, f"done resizing images and masks")
 
-    augmented_images = augment(resized_images)
-    augmented_masks = augment(resized_masks, is_mask=True)
+    augmented_images, augmented_masks = augment(resized_images, resized_masks)
+
     len_images = augmented_images.shape[0]
 
     print_time(start_time, f"done augmenting images and masks")
