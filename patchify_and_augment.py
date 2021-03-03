@@ -21,6 +21,9 @@ def patches_from_(image):
 
 
 def rotate_image(img, degree):
+    """
+    :param degree: we rotate a given image to certain degree.
+    """
     (h, w) = img.shape[:2]
     (cX, cY) = (w // 2, h // 2)
     M = cv2.getRotationMatrix2D((cX, cY), degree, 1.0)
@@ -71,9 +74,9 @@ def choose_an_augmentation(num, img):
     switcher = {
         1: elastic_transform(img, img.shape[1] * 6, img.shape[1] * 0.07),
         2: elastic_transform(img, img.shape[1] * 5, img.shape[1] * 0.05),
-        3: elastic_transform(img, img.shape[1] * 7, img.shape[1] * 0.07),
+        5: elastic_transform(img, img.shape[1] * 7, img.shape[1] * 0.07),
         4: cv2.flip(img, 1),
-        5: cv2.flip(img, -1),
+        3: cv2.flip(img, -1),
         6: rotate_image(img, 45),
         7: rotate_image(img, -90)
     }
