@@ -90,20 +90,16 @@ def patch_making():
 
     augmented_images = augment(resized_images)
     augmented_masks = augment(resized_masks, is_mask=True)
+    len_images = augmented_images.shape[0]
 
     print_time(start_time, f"done augmenting images and masks")
 
     images_patches = []
     masks_patches = []
-    # making patches from each image and mask
+    # making patches from each image and mask and scaling them to 1-0
     for inx in tqdm(range(len_images), total=len_images):
-        images_patches.append(patches_from_(resized_images[inx]) / 255)
-        mask = patches_from_(resized_masks[inx])
-        # iterating through each patch of a mask and making it a binary image
-        for i in range(mask.shape[0]):
-            _, thresh = cv2.threshold(mask[i], 0, 255, cv2.THRESH_BINARY | cv2.THRESH_OTSU)
-            mask[i] = thresh // 255
-        masks_patches.append(mask)
+        images_patches.append(patches_from_(augmented_images[inx]) / 255)
+        masks_patches.append(patches_from_(augmented_masks[inx]) / 255)
 
     images_patches = np.asarray(images_patches)
     masks_patches = np.asarray(masks_patches)

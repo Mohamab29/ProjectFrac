@@ -10,7 +10,6 @@ from tqdm import tqdm
 import os
 from gadgets import *
 
-cv2.g
 # We take the path of the masks and the train images
 MASKS_PATH = "./dataset/train/masks/"
 TRAIN_PATH = "./dataset/train/images/"
@@ -82,4 +81,4 @@ def load_images(path, re_size=False):
 
         images.append(image)
     print_time(s_time, f"done loading images from {folder_name} folder")
-    return np.asarray(images)
+    return np.asarray(images, dtype="object")

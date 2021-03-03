@@ -6,7 +6,7 @@ import tensorflow as tf
 import random
 from skimage.util.shape import view_as_windows
 from patchify_and_augment import patch_making
-
+from sklearn.model_selection import train_test_split
 
 TEST_IMAGES_PATH = './dataset/test/images/'
 TEST_MASKS_PATH = './dataset/test/masks/'
@@ -43,7 +43,7 @@ def summarize_diagnostics(history):
     ax2.figure.savefig('accuracy-loss.png')
 
 
-def train(no_of_iters):
+def train():
     """
     we first load the Unet model and then create the training data that we want to fit to our model
     and print the summary
@@ -51,8 +51,11 @@ def train(no_of_iters):
     start_time = time()
     print("loading the model")
     model = unet(input_size=(desired_size, desired_size, 1))
+
     print("preparing the data for training")
-    x_train, y_train = patch_making(no_of_iters)
+    x_train, y_train = patch_making()
+    x_train, x_val, y_train, y_val = train_test_split(x_train, y_train, test_size=0.2,random_state=42)
+
     print(model.summary())
     checkpointer = tf.keras.callbacks.ModelCheckpoint('FracUnet.h5', verbose=1, save_best_only=True)
 
@@ -63,10 +66,10 @@ def train(no_of_iters):
     history = model.fit(
         x=x_train,
         y=y_train,
-        batch_size=15,
+        batch_size=10,
         verbose=1,
-        epochs=10,
-        validation_split=0.1,
+        epochs=15,
+        validation_data=(x_val, y_val),
         callbacks=callbacks
     )
     print_time(s_time=start_time, msg="done training the U-net model")
