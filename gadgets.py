@@ -1,6 +1,6 @@
 """
 This script will contain Lots of useful gadgets (algorithms) that will be used
-through out the this project ...
+through out this project ...
 @author: Mohamed Nedal Abo-Mokh
 """
 from time import time

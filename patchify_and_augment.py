@@ -30,7 +30,7 @@ def rotate_image(img, degree):
     return cv2.warpAffine(img, M, (w, h))
 
 
-def elastic_transform(image, alpha, sigma, random_state=None):
+def elastic_transform(image, alpha, sigma, random_state=None, is_mask=False):
     """
     credits for this code goes to :
     https://gist.github.com/chsasank/4d8f68caf01f041a6453e67fb30f8f5a
@@ -48,8 +48,11 @@ def elastic_transform(image, alpha, sigma, random_state=None):
 
     x, y = np.meshgrid(np.arange(shape[0]), np.arange(shape[1]), indexing='ij')
     indices = np.reshape(x + dx, (-1, 1)), np.reshape(y + dy, (-1, 1))
+    final_res = map_coordinates(image, indices, order=1).reshape(shape)  # image transformed
+    if is_mask:
+        final_res[final_res != 0] = 255  # because the values change
 
-    return map_coordinates(image, indices, order=1).reshape(shape)
+    return final_res
 
 
 def threshold_(img):
@@ -61,8 +64,9 @@ def threshold_(img):
     return threshold_img
 
 
-def choose_an_augmentation(num, img):
+def choose_an_augmentation(num, img, is_mask=False):
     """
+    :param is_mask: if it's a mask we want to keep the values to only 255 and 0.
     :param num: the parameter will take a random INT  which will be between 1-6,
      and depending on the number , the image will have an augmentation applied to it
     :param img: An image we want to apply to some form of augmentation .
@@ -72,13 +76,13 @@ def choose_an_augmentation(num, img):
     """
     # the elastic transformation takes sigma and alpha which can have different values that will give different shapes
     switcher = {
-        1: elastic_transform(img, img.shape[1] * 6, img.shape[1] * 0.07),
-        2: elastic_transform(img, img.shape[1] * 5, img.shape[1] * 0.05),
-        5: elastic_transform(img, img.shape[1] * 7, img.shape[1] * 0.07),
-        4: cv2.flip(img, 1),
-        3: cv2.flip(img, -1),
-        6: rotate_image(img, 45),
-        7: rotate_image(img, -90)
+        # 1: elastic_transform(img, img.shape[1] * 6, img.shape[1] * 0.07, is_mask=is_mask),
+        # 2: elastic_transform(img, img.shape[1] * 5, img.shape[1] * 0.05, is_mask=is_mask),
+        # 5: elastic_transform(img, img.shape[1] * 7, img.shape[1] * 0.07, is_mask=is_mask),
+        1: cv2.flip(img, 1),
+        2: cv2.flip(img, -1),
+        3: rotate_image(img, 45),
+        4: rotate_image(img, -90)
     }
     return switcher.get(num)
 
@@ -88,14 +92,18 @@ def choose_(img, mask, rand_num_):
     since this is a a code that repeats itself throughout the loop in the augment function , I made it look better
     by using this function
     """
-    return choose_an_augmentation(rand_num_, img), choose_an_augmentation(rand_num_, mask)
+    return choose_an_augmentation(rand_num_, img), choose_an_augmentation(rand_num_, mask, is_mask=True)
+
+
+# random numbers end range e.g: 1 to 7
+END_RANGE = 4
 
 
 def randomize(old_num):
     """to generate a new random number that isn't the same as the old one"""
     num = old_num
     while old_num == num:
-        num = random.randint(1, 7)
+        num = random.randint(1, END_RANGE)
     return num
 
 
@@ -110,7 +118,7 @@ def augment(images, masks):
     augmented_images, augmented_masks = [], []
     num_of_images = images.shape[0]
     rand_num = 0
-    for inx in range(num_of_images):
+    for inx in tqdm(range(num_of_images), total=num_of_images):
 
         # first we add the original image and mask
         augmented_images.append(images[inx])
@@ -118,7 +126,7 @@ def augment(images, masks):
 
         # first augmentation for them both ,
         # temp1 = is an augmented image , temp2 = is augmented mask .
-        rand_num = random.randint(1, 7)
+        rand_num = random.randint(1, END_RANGE)
         temp1, temp2 = choose_(images[inx], masks[inx], rand_num_=rand_num)
         augmented_images.append(temp1)
         augmented_masks.append(temp2)

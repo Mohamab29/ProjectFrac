@@ -94,7 +94,7 @@ def test():
     print("Loading the model")
     model = load_model('Unet.h5')
     print("Finished Loading the model")
-    random_index = 1 # random.randint(0, 4)
+    random_index = 3  # random.randint(0, 4)
     test_images = load_images(TEST_IMAGES_PATH)
     test_masks = load_images(TEST_MASKS_PATH)
 
@@ -131,14 +131,16 @@ def test():
     # unpatchifying that predictions into one image
     print("writing the images to the predictions folder")
     pred = (pred * 255).astype(np.uint8)
-    _, image_pred = cv2.threshold(pred, 0, 255, cv2.THRESH_BINARY
-                                  | cv2.THRESH_OTSU)
+    # _, image_pred = cv2.threshold(pred, 0, 255, cv2.THRESH_BINARY
+    #                               | cv2.THRESH_OTSU)
     # image_pred = cv2.adaptiveThreshold(pred, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
     #                                    cv2.THRESH_BINARY_INV, 7, 0)
     # kernel = np.ones((3, 3), np.uint8)
     # image_pred = cv2.morphologyEx(image_pred, cv2.MORPH_CLOSE, kernel)
+    image_pred = pred.copy()
+    image_pred[pred > 0] = 255
     image_pred = crop_image(image_pred)
-    cv2.imwrite(TEST_PREDS_PATH + str(0) + ".png", image_pred)
+    cv2.imwrite(TEST_PREDS_PATH + str(random_index) + ".png", image_pred)
 
     display(test_images[random_index], 'Original Image')
     display(test_masks[random_index], 'Ground truth Mask')
@@ -193,4 +195,4 @@ def enhance_preds(d_size):
 
 
 if __name__ == "__main__":
-    train()
+    test()
