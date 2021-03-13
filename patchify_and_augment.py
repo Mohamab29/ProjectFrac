@@ -4,7 +4,6 @@ import random
 from scipy.ndimage.interpolation import map_coordinates
 from scipy.ndimage.filters import gaussian_filter
 
-
 # the desired size for an image and a mask for the training model
 
 def patches_from_(image):
