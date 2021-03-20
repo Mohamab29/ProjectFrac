@@ -5,6 +5,8 @@ through out this project ...
 """
 from time import time
 import matplotlib.pyplot as plt
+from datetime import date
+from datetime import datetime
 
 
 def calculate_time(start_time):
@@ -42,3 +44,13 @@ def display(img, title, cmap='gray'):
     ax.imshow(img, cmap=cmap)
     plt.show()
 
+
+def get_current_date_time():
+    """
+    A function that gets the current time and date
+    :return: current time in the form of Hour-Minutes, and same day date in the form of
+    day, abbreviated month and year
+    """
+    current_time = datetime.now().strftime("%H-%M")
+    current_date = date.today().strftime("%d-%b-%Y")
+    return current_time,current_date

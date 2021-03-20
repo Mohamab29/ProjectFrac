@@ -40,7 +40,8 @@ def summarize_diagnostics(history):
     ax2.set_xlabel('Epoch')
     ax2.set_title('Loss')
     ax2.legend(loc="best")
-    ax2.figure.savefig('accuracy-loss.png')
+    cur_time, cur_date = get_current_date_time()
+    ax2.figure.savefig(f'accuracy-loss-{cur_time}-{cur_date}.png')
 
 
 def train():
@@ -63,7 +64,7 @@ def train():
                                                        ,
                                                        verbose=1, save_best_only=True, mode='max')
     callbacks = [
-        tf.keras.callbacks.EarlyStopping(patience=2, monitor='val_loss'),
+        tf.keras.callbacks.EarlyStopping(patience=3, monitor='val_loss'),
         tf.keras.callbacks.TensorBoard(log_dir='logs'),
         check_pointer
     ]
@@ -74,13 +75,14 @@ def train():
         y=y_train,
         batch_size=10,
         verbose=1,
-        epochs=15,
+        epochs=25,
         validation_data=(x_val, y_val),
         callbacks=callbacks
     )
     print_time(s_time=start_time, msg="done training the U-net model")
     print("saving the model")
-    model.save('Unet.h5')
+    cur_time, cur_date = get_current_date_time()
+    model.save(f'trained-model-{cur_time}-{cur_date}.h5')
 
     summarize_diagnostics(history)
     print_time(s_time=start_time, msg="finished running the script")
