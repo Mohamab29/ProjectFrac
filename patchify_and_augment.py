@@ -175,10 +175,10 @@ def patch_making():
     print_time(start_time, f"done resizing images and masks")
 
     # if we want to augment
-    # augmented_images, augmented_masks = augment(resized_images, resized_masks)
+    augmented_images, augmented_masks = augment(resized_images, resized_masks)
 
     # No Augmentation
-    augmented_images, augmented_masks = resized_images, resized_masks
+    # augmented_images, augmented_masks = resized_images, resized_masks
 
     len_images = augmented_images.shape[0]
 

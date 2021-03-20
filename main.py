@@ -20,7 +20,7 @@ def summarize_diagnostics(history):
     :arg history:the model and it's history basically
     """
     f, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 4))
-    t = f.suptitle('Unet model Performance - Augmented data without elastic', fontsize=12)
+    t = f.suptitle('Performance with Augmented data without elastic - early stopping', fontsize=12)
     # f.subplots_adjust(top=0.85, wspace=0.3)
 
     max_epoch = len(history.history['accuracy']) + 1
@@ -71,9 +71,11 @@ def train():
                                                                 '{val_accuracy:.2f}.hdf5'
                                                        ,
                                                        verbose=1, save_best_only=True, mode='max')
+    cur_time, cur_date = get_current_date_time()
+
     callbacks = [
-        # tf.keras.callbacks.EarlyStopping(patience=3, monitor='val_loss'),
-        tf.keras.callbacks.TensorBoard(log_dir='logs')
+        tf.keras.callbacks.EarlyStopping(patience=3, monitor='val_loss'),
+        tf.keras.callbacks.TensorBoard(log_dir=f'logs/logs-{cur_time}-{cur_date}')
         # check_pointer
     ]
 
@@ -89,7 +91,7 @@ def train():
     )
     print_time(s_time=start_time, msg="done training the U-net model")
     print("saving the model")
-    cur_time, cur_date = get_current_date_time()
+
     model.save(f'trained_models/trained-model-{cur_time}-{cur_date}.h5')
 
     summarize_diagnostics(history)
@@ -212,4 +214,4 @@ def enhance_preds(d_size):
 
 
 if __name__ == "__main__":
-    test()
+    train()
