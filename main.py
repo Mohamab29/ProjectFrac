@@ -57,12 +57,18 @@ def train():
     x_train, x_val, y_train, y_val = train_test_split(x_train, y_train, test_size=0.2, random_state=42)
 
     print(model.summary())
-    checkpointer = tf.keras.callbacks.ModelCheckpoint('FracUnet.h5', verbose=1, save_best_only=True)
-
+    # For evaluating the model
+    check_pointer = tf.keras.callbacks.ModelCheckpoint(filepath='saved_models/model-stopped-at-{epoch:02d}-'
+                                                                '{val_accuracy:.2f}.hdf5'
+                                                       ,
+                                                       verbose=1, save_best_only=True, mode='max')
     callbacks = [
         tf.keras.callbacks.EarlyStopping(patience=2, monitor='val_loss'),
-        tf.keras.callbacks.TensorBoard(log_dir='logs')]
+        tf.keras.callbacks.TensorBoard(log_dir='logs'),
+        check_pointer
+    ]
 
+    # fitting the model
     history = model.fit(
         x=x_train,
         y=y_train,
@@ -195,4 +201,4 @@ def enhance_preds(d_size):
 
 
 if __name__ == "__main__":
-    test()
+    train()

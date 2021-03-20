@@ -76,11 +76,11 @@ def choose_an_augmentation(num, img, is_mask=False):
     """
     # the elastic transformation takes sigma and alpha which can have different values that will give different shapes
     switcher = {
-        # 1: elastic_transform(img, img.shape[1] * 6, img.shape[1] * 0.07, is_mask=is_mask),
-        # 2: elastic_transform(img, img.shape[1] * 5, img.shape[1] * 0.05, is_mask=is_mask),
-        # 5: elastic_transform(img, img.shape[1] * 7, img.shape[1] * 0.07, is_mask=is_mask),
-        1: cv2.flip(img, 1),
-        2: cv2.flip(img, -1),
+        1: elastic_transform(img, img.shape[1] * 6, img.shape[1] * 0.05, is_mask=is_mask),
+        2: elastic_transform(img, img.shape[1] * 5, img.shape[1] * 0.04, is_mask=is_mask),
+        5: elastic_transform(img, img.shape[1] * 7, img.shape[1] * 0.06, is_mask=is_mask),
+        6: cv2.flip(img, 1),
+        7: cv2.flip(img, -1),
         3: rotate_image(img, 45),
         4: rotate_image(img, -90)
     }
@@ -96,7 +96,7 @@ def choose_(img, mask, rand_num_):
 
 
 # random numbers end range e.g: 1 to 7
-END_RANGE = 4
+END_RANGE = 7
 
 
 def randomize(old_num):
@@ -174,7 +174,11 @@ def patch_making():
 
     print_time(start_time, f"done resizing images and masks")
 
-    augmented_images, augmented_masks = augment(resized_images, resized_masks)
+    # if we want to augment
+    # augmented_images, augmented_masks = augment(resized_images, resized_masks)
+
+    # No Augmentation
+    augmented_images, augmented_masks = resized_images, resized_masks
 
     len_images = augmented_images.shape[0]
 
@@ -185,13 +189,24 @@ def patch_making():
     # making patches from each image and mask and scaling them to 1-0
     for inx in tqdm(range(len_images), total=len_images):
         images_patches.append(patches_from_(augmented_images[inx]) / 255)
-        masks_patches.append(patches_from_(augmented_masks[inx]) / 255)
+        # we take a mask then we threshold it in order to have only 255 and 0 values,
+        # then we normalize it and scale it back to be 0 to 1
+        # we patchify each mask to 49 little images/patches
+        masks_patches.append(patches_from_(threshold_(augmented_masks[inx])) / 255)
 
     images_patches = np.asarray(images_patches)
     masks_patches = np.asarray(masks_patches)
 
     patched_images = np.reshape(images_patches.copy(), (len_images * 49, 256, 256, 1))
     patched_masks = np.reshape(masks_patches.copy(), (len_images * 49, 256, 256, 1))
+
+    print("########################################################")
+    print(f"Number of original images is: {augmented_images.shape[0]}\n"
+          f"Number of original masks is: {augmented_masks.shape[0]}")
+    print("########################################################")
+    print(f"Number of pachified images is: {patched_images.shape[0]}\n"
+          f"Number of pachified masks is: {patched_masks.shape[0]}")
+    print("########################################################")
 
     print_time(s_time=start_time, msg="done generating images and masks for training")
 
