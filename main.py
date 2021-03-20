@@ -20,8 +20,8 @@ def summarize_diagnostics(history):
     :arg history:the model and it's history basically
     """
     f, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 4))
-    t = f.suptitle('Unet model Performance', fontsize=12)
-    f.subplots_adjust(top=0.85, wspace=0.3)
+    t = f.suptitle('Unet model Performance - Augmented data without elastic', fontsize=12)
+    # f.subplots_adjust(top=0.85, wspace=0.3)
 
     max_epoch = len(history.history['accuracy']) + 1
     epoch_list = list(range(1, max_epoch))
@@ -41,7 +41,7 @@ def summarize_diagnostics(history):
     ax2.set_title('Loss')
     ax2.legend(loc="best")
     cur_time, cur_date = get_current_date_time()
-    ax2.figure.savefig(f'accuracy-loss-{cur_time}-{cur_date}.png')
+    ax2.figure.savefig(f'accuracy_loss_graphs/accuracy-loss-{cur_time}-{cur_date}.png')
 
 
 def train():
@@ -57,6 +57,14 @@ def train():
     x_train, y_train = patch_making()
     x_train, x_val, y_train, y_val = train_test_split(x_train, y_train, test_size=0.2, random_state=42)
 
+    print("########################################################")
+    print(f"Number of training images is: {x_train.shape[0]}\n"
+          f"Number of training masks is: {y_train.shape[0]}")
+    print("########################################################")
+    print(f"Number of validation images is: {x_val.shape[0]}\n"
+          f"Number of validation masks is: {y_val.shape[0]}")
+    print("########################################################")
+
     print(model.summary())
     # For evaluating the model
     check_pointer = tf.keras.callbacks.ModelCheckpoint(filepath='saved_models/model-stopped-at-{epoch:02d}-'
@@ -64,9 +72,9 @@ def train():
                                                        ,
                                                        verbose=1, save_best_only=True, mode='max')
     callbacks = [
-        tf.keras.callbacks.EarlyStopping(patience=3, monitor='val_loss'),
-        tf.keras.callbacks.TensorBoard(log_dir='logs'),
-        check_pointer
+        # tf.keras.callbacks.EarlyStopping(patience=3, monitor='val_loss'),
+        tf.keras.callbacks.TensorBoard(log_dir='logs')
+        # check_pointer
     ]
 
     # fitting the model
@@ -82,7 +90,7 @@ def train():
     print_time(s_time=start_time, msg="done training the U-net model")
     print("saving the model")
     cur_time, cur_date = get_current_date_time()
-    model.save(f'trained-model-{cur_time}-{cur_date}.h5')
+    model.save(f'trained_models/trained-model-{cur_time}-{cur_date}.h5')
 
     summarize_diagnostics(history)
     print_time(s_time=start_time, msg="finished running the script")
@@ -100,7 +108,7 @@ def test():
     """
     start_time = time()
     print("Loading the model")
-    model = load_model('Unet.h5')
+    model = load_model('trained_models/trained-model-18-22-20-Mar-2021.h5')
     print("Finished Loading the model")
     random_index = 3  # random.randint(0, 4)
     test_images = load_images(TEST_IMAGES_PATH)
@@ -148,7 +156,8 @@ def test():
     image_pred = pred.copy()
     image_pred[pred > 0] = 255
     image_pred = crop_image(image_pred)
-    cv2.imwrite(TEST_PREDS_PATH + str(random_index) + ".png", image_pred)
+    cur_time, cur_date = get_current_date_time()
+    cv2.imwrite(TEST_PREDS_PATH + str(random_index) + f"-{cur_time}-{cur_date}.png", image_pred)
 
     display(test_images[random_index], 'Original Image')
     display(test_masks[random_index], 'Ground truth Mask')
@@ -203,4 +212,4 @@ def enhance_preds(d_size):
 
 
 if __name__ == "__main__":
-    train()
+    test()
