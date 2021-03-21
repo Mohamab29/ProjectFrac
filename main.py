@@ -139,7 +139,9 @@ def train():
 
     model.save(f'trained_models/{model_name}.h5')
 
+    print(f"saving the record of the trained model: {model_name}")
     model_record = summarize_diagnostics(history, model_record)
+    save_record(model_record=model_record)
 
     print_time(s_time=start_time, msg="finished running the script")
 
@@ -228,4 +230,4 @@ def test():
 
 
 if __name__ == "__main__":
-    test()
+    train()

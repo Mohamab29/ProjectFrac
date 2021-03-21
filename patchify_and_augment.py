@@ -76,11 +76,11 @@ def choose_an_augmentation(num, img, is_mask=False):
     """
     # the elastic transformation takes sigma and alpha which can have different values that will give different shapes
     switcher = {
-        # 1: elastic_transform(img, img.shape[1] * 6, img.shape[1] * 0.05, is_mask=is_mask),
-        # 2: elastic_transform(img, img.shape[1] * 5, img.shape[1] * 0.04, is_mask=is_mask),
-        # 5: elastic_transform(img, img.shape[1] * 7, img.shape[1] * 0.06, is_mask=is_mask),
-        1: cv2.flip(img, 1),
-        2: cv2.flip(img, -1),
+        1: elastic_transform(img, img.shape[1] * 6, img.shape[1] * 0.05, is_mask=is_mask),
+        2: elastic_transform(img, img.shape[1] * 5, img.shape[1] * 0.04, is_mask=is_mask),
+        5: elastic_transform(img, img.shape[1] * 7, img.shape[1] * 0.06, is_mask=is_mask),
+        6: cv2.flip(img, 1),
+        7: cv2.flip(img, -1),
         3: rotate_image(img, 45),
         4: rotate_image(img, -90)
     }
