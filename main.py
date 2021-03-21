@@ -3,7 +3,7 @@ from preprocessing import *
 from keras.models import load_model
 import cv2
 import tensorflow as tf
-import random
+import pandas as pd
 from skimage.util.shape import view_as_windows
 from patchify_and_augment import patch_making
 from sklearn.model_selection import train_test_split
@@ -11,13 +11,16 @@ from sklearn.model_selection import train_test_split
 TEST_IMAGES_PATH = './dataset/test/images/'
 TEST_MASKS_PATH = './dataset/test/masks/'
 TEST_PREDS_PATH = './dataset/test/predictions/'
+RECORDS_FILE = 'unet_model_records.csv'
 
 
 # plot diagnostic learning curves
-def summarize_diagnostics(history):
+def summarize_diagnostics(history, model_record):
     """
-    printing the summary of of model
-    :arg history:the model and it's history basically
+    printing the summary of of model and updating the model record dictionary
+    :param history: takes models history, and we can't get relevant data from it.
+    :param model_record: is a dictionary that contains metadata about the model
+    :returns model_record: updated dictionary with the relevant data.
     """
     f, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 4))
     t = f.suptitle('Performance with Augmented data without elastic - early stopping', fontsize=12)
@@ -40,16 +43,66 @@ def summarize_diagnostics(history):
     ax2.set_xlabel('Epoch')
     ax2.set_title('Loss')
     ax2.legend(loc="best")
-    cur_time, cur_date = get_current_date_time()
-    ax2.figure.savefig(f'accuracy_loss_graphs/accuracy-loss-{cur_time}-{cur_date}.png')
+
+    ax2.figure.savefig(f'accuracy_loss_graphs/accuracy_loss_{model_record["name"]}.png')
+    model_record["num_of_epochs"] = max_epoch
+    model_record["train_accuracy"] = history.history['accuracy']
+    model_record["val_accuracy"] = history.history['val_accuracy']
+    model_record["train_loss"] = history.history['loss']
+    model_record["val_loss"] = history.history['val_loss']
+
+    return model_record
+
+
+def save_record(model_record):
+    """
+    :param model_record: a model record we want to append to models records csv file.
+    """
+
+    df = pd.read_csv(RECORDS_FILE)
+    df = df.append(model_record, ignore_index=True)
+    df.to_csv(RECORDS_FILE, index=False)
 
 
 def train():
     """
     we first load the Unet model and then create the training data that we want to fit to our model
-    and print the summary
+    and print the summary.
+
+    :var model_record: is a dictionary that contains {
+        name : model_{time of start}_{date of start} .
+        num_of_epochs : total epochs the model trained  .
+        num_of_training_images: total number of images used for training of the model
+        num_of_training_masks: total number of masks used for training of the model , must be same as number of training images.
+        num_of _val_images: total number of images used for the validation of the model.
+        num_of _val_masks: total number of masks used for training of the model , must be same as number of training images.
+        train_loss: the loss score at the last epoch during the training .
+        train_accuracy: the accuracy score at the last epoch during the training.
+        val_loss: the loss score on the validation data.
+        val_accuracy: the accuracy score on the validation data.
+        augmented: no/yes.
+    }
     """
-    start_time = time()
+    start_time = time()  # this is to show how many seconds or minutes have passed to run some block of code
+    curr_time, curr_date = get_current_date_time()  # time and date of when the script was run
+
+    model_name = f"model_{curr_time}_{curr_date}"
+    augmented = "Yes"  # Yes / No
+
+    model_record = {
+        "name": model_name,
+        "num_of_epochs": "number",
+        "num_of_training_images": "number",
+        "num_of_training_masks": "number",
+        "num_of_val_images": "number",
+        "num_of_val_masks": "number",
+        "train_accuracy": "number",
+        "val_accuracy": "number",
+        "train_loss": "number",
+        "val_loss": "number",
+        "augmented": augmented
+    }
+
     print("loading the model")
     model = unet(input_size=(desired_size, desired_size, 1))
 
@@ -57,26 +110,18 @@ def train():
     x_train, y_train = patch_making()
     x_train, x_val, y_train, y_val = train_test_split(x_train, y_train, test_size=0.2, random_state=42)
 
-    print("########################################################")
-    print(f"Number of training images is: {x_train.shape[0]}\n"
-          f"Number of training masks is: {y_train.shape[0]}")
-    print("########################################################")
-    print(f"Number of validation images is: {x_val.shape[0]}\n"
-          f"Number of validation masks is: {y_val.shape[0]}")
-    print("########################################################")
+    # adding the number of images in the training dataset
+    model_record['num_of_training_images'] = x_train.shape[0]
+    model_record['num_of_training_masks'] = y_train.shape[0]
+    model_record['num_of_val_images'] = x_val.shape[0]
+    model_record['num_of_val_masks'] = y_val.shape[0]
 
     print(model.summary())
-    # For evaluating the model
-    check_pointer = tf.keras.callbacks.ModelCheckpoint(filepath='saved_models/model-stopped-at-{epoch:02d}-'
-                                                                '{val_accuracy:.2f}.hdf5'
-                                                       ,
-                                                       verbose=1, save_best_only=True, mode='max')
-    cur_time, cur_date = get_current_date_time()
 
+    # For evaluating the model
     callbacks = [
-        tf.keras.callbacks.EarlyStopping(patience=3, monitor='val_loss'),
-        tf.keras.callbacks.TensorBoard(log_dir=f'logs/logs-{cur_time}-{cur_date}')
-        # check_pointer
+        # tf.keras.callbacks.EarlyStopping(patience=3, monitor='val_loss'),
+        tf.keras.callbacks.TensorBoard(log_dir=f'logs/logs_{model_name}')
     ]
 
     # fitting the model
@@ -92,9 +137,10 @@ def train():
     print_time(s_time=start_time, msg="done training the U-net model")
     print("saving the model")
 
-    model.save(f'trained_models/trained-model-{cur_time}-{cur_date}.h5')
+    model.save(f'trained_models/{model_name}.h5')
 
-    summarize_diagnostics(history)
+    model_record = summarize_diagnostics(history, model_record)
+
     print_time(s_time=start_time, msg="finished running the script")
 
 
@@ -109,8 +155,11 @@ def test():
     We read each image in the test folder and predict a mask for each image
     """
     start_time = time()
+    models_records = pd.read_csv(RECORDS_FILE)
+    model_name: str = models_records["name"][4]  # a model name to run
+
     print("Loading the model")
-    model = load_model('trained_models/trained-model-18-22-20-Mar-2021.h5')
+    model = load_model(f'trained_models/{model_name}')
     print("Finished Loading the model")
     random_index = 3  # random.randint(0, 4)
     test_images = load_images(TEST_IMAGES_PATH)
@@ -146,7 +195,7 @@ def test():
     if not os.path.exists(TEST_PREDS_PATH):
         os.makedirs(TEST_PREDS_PATH)
 
-    # unpatchifying that predictions into one image
+    # unpatchfying that predictions into one image
     print("writing the images to the predictions folder")
     pred = (pred * 255).astype(np.uint8)
     # _, image_pred = cv2.threshold(pred, 0, 255, cv2.THRESH_BINARY
@@ -159,7 +208,7 @@ def test():
     image_pred[pred > 0] = 255
     image_pred = crop_image(image_pred)
     cur_time, cur_date = get_current_date_time()
-    cv2.imwrite(TEST_PREDS_PATH + str(random_index) + f"-{cur_time}-{cur_date}.png", image_pred)
+    cv2.imwrite(TEST_PREDS_PATH + str(random_index) + f"_{model_name}.png", image_pred)
 
     display(test_images[random_index], 'Original Image')
     display(test_masks[random_index], 'Ground truth Mask')
@@ -214,4 +263,4 @@ def enhance_preds(d_size):
 
 
 if __name__ == "__main__":
-    train()
+    test()

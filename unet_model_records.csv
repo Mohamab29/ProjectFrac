@@ -1,0 +1,5 @@
+name,num_of_epochs,num_of_training_images,num_of_training_masks,num_of _val_images,num_of _val_masks,train_accuracy,val_accuracy,train_loss,val_loss,augmented
+model_15-55_20-Mar-2021,23,509,509,128,128,91.9,89.13,0.1556,0.22,No
+model_18-22_20-Mar-2021,25,509,509,128,128,92.01,90.02,0.1512,0.21,No
+model_22-25_20-Mar-2021,25,1332,1332,334,334,94.04,91.4,0.1358,0.204,Yes
+model_22-36_20-Mar-2021,11,1450,1450,363,363,91.46,90.7,0.1928,0.2123,Yes
