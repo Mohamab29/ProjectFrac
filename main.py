@@ -156,10 +156,10 @@ def test():
     """
     start_time = time()
     models_records = pd.read_csv(RECORDS_FILE)
-    model_name: str = models_records["name"][4]  # a model name to run
+    model_name: str = models_records["name"][3]  # a model name to run
 
     print("Loading the model")
-    model = load_model(f'trained_models/{model_name}')
+    model = load_model(f'trained_models/{model_name}.h5')
     print("Finished Loading the model")
     random_index = 3  # random.randint(0, 4)
     test_images = load_images(TEST_IMAGES_PATH)
@@ -225,41 +225,6 @@ def test():
     plt.show()
     """
     print_time(s_time=start_time, msg="finished testing and predicting")
-
-
-def contrastStretching(im):
-    b = im.max()
-    a = im.min()
-    # Converting im1 to float.
-    c = im.astype(float)
-    # Contrast stretching transformation.
-    im1 = 255.0 * (c - a) / (b - a + 0.0000001)
-    return im1
-
-
-def enhance_preds(d_size):
-    """
-    :arg d_size: what size we desire to enhance the images to
-    """
-    start_time = time()
-    print("enhancing the prediction images")
-    images = load_images(TEST_PREDS_PATH)
-    kernel = np.ones((5, 5), np.uint8)
-    for i in range(len(images)):
-        img = images[i]
-        img = image_resize(img=img, d_size=d_size)
-        img = np.reshape(img, (d_size, d_size))
-
-        contrast_image = contrastStretching(img) / 255
-        img = np.round_(contrast_image * 255).astype(np.uint8)
-
-        _, image_result = cv2.threshold(img, 0, 255, cv2.THRESH_BINARY
-                                        | cv2.THRESH_OTSU)
-
-        img = cv2.morphologyEx(img, cv2.MORPH_CLOSE, kernel)
-        cv2.imwrite(TEST_PREDS_PATH + str(i) + ".png", img)
-
-    print_time(s_time=start_time, msg="finished writing enhanced prediction ")
 
 
 if __name__ == "__main__":
