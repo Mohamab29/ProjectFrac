@@ -242,7 +242,7 @@
                    </size>
                   </property>
                   <property name="cursor">
-                   <cursorShape>PointingHandCursor</cursorShape>
+                   <cursorShape>ArrowCursor</cursorShape>
                   </property>
                   <property name="mouseTracking">
                    <bool>false</bool>

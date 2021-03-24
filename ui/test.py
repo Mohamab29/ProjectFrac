@@ -90,7 +90,7 @@ class Ui_FractureArea(object):
         self.pictureGridLayout.setObjectName("pictureGridLayout")
         self.image1 = QtWidgets.QLabel(self.scrollAreaWidgetContent)
         self.image1.setMaximumSize(QtCore.QSize(200, 200))
-        self.image1.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        self.image1.setCursor(QtGui.QCursor(QtCore.Qt.ArrowCursor))
         self.image1.setMouseTracking(False)
         self.image1.setAcceptDrops(False)
         self.image1.setAutoFillBackground(False)
