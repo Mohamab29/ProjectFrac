@@ -22,6 +22,7 @@ def patches_from_(image):
 
 def rotate_image(img, degree):
     """
+    :param img: an image we want to rotate.
     :param degree: we rotate a given image to certain degree.
     """
     (h, w) = img.shape[:2]
@@ -76,9 +77,9 @@ def choose_an_augmentation(num, img, is_mask=False):
     """
     # the elastic transformation takes sigma and alpha which can have different values that will give different shapes
     switcher = {
-        1: elastic_transform(img, img.shape[1] * 6, img.shape[1] * 0.05, is_mask=is_mask),
-        2: elastic_transform(img, img.shape[1] * 5, img.shape[1] * 0.04, is_mask=is_mask),
-        5: elastic_transform(img, img.shape[1] * 7, img.shape[1] * 0.06, is_mask=is_mask),
+        1: elastic_transform(img, img.shape[1] * 8, img.shape[1] * 0.09, is_mask=is_mask),
+        2: elastic_transform(img, img.shape[1] * 5, img.shape[1] * 0.07, is_mask=is_mask),
+        5: elastic_transform(img, img.shape[1] * 7, img.shape[1] * 0.08, is_mask=is_mask),
         6: cv2.flip(img, 1),
         7: cv2.flip(img, -1),
         3: rotate_image(img, 45),
@@ -96,7 +97,7 @@ def choose_(img, mask, rand_num_):
 
 
 # random numbers end range e.g: 1 to 7
-END_RANGE = 4
+END_RANGE = 7
 
 
 def randomize(old_num):
@@ -132,13 +133,13 @@ def augment(images, masks):
         augmented_masks.append(temp2)
 
         # add more images if lucky
-        if rand_num % 2 == 0:
+        if rand_num % 3 == 0:
             rand_num = randomize(rand_num)
             temp1, temp2 = choose_(images[inx], masks[inx], rand_num_=rand_num)
             augmented_images.append(temp1)
             augmented_masks.append(temp2)
 
-        if rand_num % 3 == 0:
+        elif rand_num % 2 == 0:
             rand_num = randomize(rand_num)
             temp1, temp2 = choose_(images[inx], masks[inx], rand_num_=rand_num)
             augmented_images.append(temp1)
@@ -175,10 +176,10 @@ def patch_making():
     print_time(start_time, f"done resizing images and masks")
 
     # if we want to augment
-    augmented_images, augmented_masks = augment(resized_images, resized_masks)
+    # augmented_images, augmented_masks = augment(resized_images, resized_masks)
 
     # No Augmentation
-    # augmented_images, augmented_masks = resized_images, resized_masks
+    augmented_images, augmented_masks = resized_images, resized_masks
 
     len_images = augmented_images.shape[0]
 

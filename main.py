@@ -23,7 +23,7 @@ def summarize_diagnostics(history, model_record):
     :returns model_record: updated dictionary with the relevant data.
     """
     f, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 4))
-    t = f.suptitle('Performance with Augmented data without elastic - early stopping', fontsize=12)
+    t = f.suptitle('Regular Performance with no augmentation', fontsize=12)
     # f.subplots_adjust(top=0.85, wspace=0.3)
 
     max_epoch = len(history.history['accuracy']) + 1
@@ -45,11 +45,12 @@ def summarize_diagnostics(history, model_record):
     ax2.legend(loc="best")
 
     ax2.figure.savefig(f'accuracy_loss_graphs/accuracy_loss_{model_record["name"]}.png')
-    model_record["num_of_epochs"] = max_epoch
-    model_record["train_accuracy"] = history.history['accuracy']
-    model_record["val_accuracy"] = history.history['val_accuracy']
-    model_record["train_loss"] = history.history['loss']
-    model_record["val_loss"] = history.history['val_loss']
+
+    model_record["num_of_epochs"] = max_epoch - 1
+    model_record["train_accuracy"] = round(history.history['accuracy'][-1] * 100, 2)
+    model_record["val_accuracy"] = round(history.history['val_accuracy'][-1] * 100, 2)
+    model_record["train_loss"] = round(history.history['loss'][-1], 4)
+    model_record["val_loss"] = round(history.history['val_loss'][-1], 4)
 
     return model_record
 
@@ -87,7 +88,7 @@ def train():
     curr_time, curr_date = get_current_date_time()  # time and date of when the script was run
 
     model_name = f"model_{curr_time}_{curr_date}"
-    augmented = "Yes"  # Yes / No
+    augmented = "No"  # Yes / No
 
     model_record = {
         "name": model_name,
@@ -158,7 +159,7 @@ def test():
     """
     start_time = time()
     models_records = pd.read_csv(RECORDS_FILE)
-    model_name: str = models_records["name"][3]  # a model name to run
+    model_name: str = models_records["name"][8]  # a model name to run - in csv file index - 2
 
     print("Loading the model")
     model = load_model(f'trained_models/{model_name}.h5')
@@ -209,7 +210,6 @@ def test():
     image_pred = pred.copy()
     image_pred[pred > 0] = 255
     image_pred = crop_image(image_pred)
-    cur_time, cur_date = get_current_date_time()
     cv2.imwrite(TEST_PREDS_PATH + str(random_index) + f"_{model_name}.png", image_pred)
 
     display(test_images[random_index], 'Original Image')
@@ -230,4 +230,4 @@ def test():
 
 
 if __name__ == "__main__":
-    train()
+    test()
