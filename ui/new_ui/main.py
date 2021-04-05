@@ -85,7 +85,7 @@ class MainWindow(QMainWindow):
         if returnValue == QMessageBox.Ok:
             return True
         else: return False
-git 
+        
     def openImage(self, path):
         # imageViewerFromCommandLine = {'linux': 'xdg-open',
         #                               'win32': 'explorer',
