@@ -336,7 +336,7 @@ QPushButton:hover {
           <item>
            <widget class="QStackedWidget" name="stackedWidget">
             <property name="currentIndex">
-             <number>0</number>
+             <number>1</number>
             </property>
             <widget class="QWidget" name="page_1">
              <layout class="QVBoxLayout" name="verticalLayout_7">
@@ -367,7 +367,7 @@ QPushButton:hover {
                     <item row="0" column="0" alignment="Qt::AlignHCenter">
                      <widget class="QLabel" name="label_selected_picture">
                       <property name="styleSheet">
-                       <string notr="true">QLabel {color: rgb(255, 255, 255)}</string>
+                       <string notr="true">QLabel {color: rgb(130, 130, 130)}</string>
                       </property>
                       <property name="text">
                        <string>Please load and select image.</string>
@@ -499,6 +499,9 @@ QPushButton:hover {
                 <layout class="QHBoxLayout" name="horizontalLayout_4">
                  <item>
                   <widget class="QPushButton" name="btn_clear_images">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
                    <property name="font">
                     <font>
                      <weight>50</weight>
@@ -516,7 +519,7 @@ QPushButton:hover {
                    </property>
                    <property name="styleSheet">
                     <string notr="true">QPushButton {
-	color: rgb(160, 160, 160);
+	color: rgb(100, 100, 100);
 }
 QPushButton:hover {
 	color: rgb(85, 170, 255);
@@ -585,13 +588,13 @@ QPushButton:hover {
                     <enum>QFrame::Raised</enum>
                    </property>
                    <layout class="QGridLayout" name="gridLayout_4">
-                    <item row="0" column="0" alignment="Qt::AlignHCenter">
+                    <item row="0" column="0" alignment="Qt::AlignHCenter|Qt::AlignVCenter">
                      <widget class="QLabel" name="label_selected_picture_4">
                       <property name="styleSheet">
-                       <string notr="true">QLabel {color: rgb(255, 255, 255)}</string>
+                       <string notr="true">QLabel {color: rgb(130, 130, 130)}</string>
                       </property>
                       <property name="text">
-                       <string>Please load and select image.</string>
+                       <string/>
                       </property>
                       <property name="scaledContents">
                        <bool>true</bool>
@@ -702,6 +705,9 @@ QPushButton:hover {
                 <layout class="QHBoxLayout" name="horizontalLayout_5">
                  <item>
                   <widget class="QPushButton" name="btn_clear_images_2">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
                    <property name="font">
                     <font>
                      <weight>50</weight>
@@ -719,7 +725,7 @@ QPushButton:hover {
                    </property>
                    <property name="styleSheet">
                     <string notr="true">QPushButton {
-	color: rgb(160, 160, 160);
+	color: rgb(100, 100, 100);
 }
 QPushButton:hover {
 	color: rgb(85, 170, 255);
@@ -732,6 +738,9 @@ QPushButton:hover {
                  </item>
                  <item>
                   <widget class="QPushButton" name="btn_load_images_2">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
                    <property name="cursor">
                     <cursorShape>PointingHandCursor</cursorShape>
                    </property>
@@ -743,7 +752,7 @@ QPushButton:hover {
                    </property>
                    <property name="styleSheet">
                     <string notr="true">QPushButton {
-	color: rgb(160, 160, 160);
+	color: rgb(100, 100, 100);
 }
 QPushButton:hover {
 	color: rgb(85, 170, 255);
@@ -765,9 +774,12 @@ QPushButton:hover {
                  </item>
                  <item>
                   <widget class="QPushButton" name="pushButton">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
                    <property name="styleSheet">
                     <string notr="true">QPushButton {
-	color: rgb(160, 160, 160);
+	color: rgb(100, 100, 100);
 }
 QPushButton:hover {
 	color: rgb(85, 170, 255);

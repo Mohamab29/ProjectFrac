@@ -1,4 +1,4 @@
-from PyQt5.QtWidgets import QMainWindow, QApplication,QFileDialog,QMessageBox,QDesktopWidget
+from PyQt5.QtWidgets import QMainWindow, QApplication,QFileDialog,QMessageBox,QDesktopWidget,QFrame
 from ui_functions import *
 import sys
 import subprocess
@@ -6,6 +6,7 @@ from PyQt5 import QtCore, QtGui, QtWidgets
 from ui_main import Ui_MainWindow
 from dialog import Ui_Dialog
 from PIL import Image
+
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -32,8 +33,16 @@ class MainWindow(QMainWindow):
         self.ui.images_import_list.itemClicked.connect(self.evnImageListItemClicked)
         self.ui.images_import_list.itemDoubleClicked.connect(self.evnImageListItemDoubleClicked)
 
+
+    def imageLabelFrame(self,frame1,frame2,lineWidth):
+        self.ui.label_selected_picture.setFrameShape(frame1)
+        self.ui.label_selected_picture.setFrameShadow(frame2)
+        self.ui.label_selected_picture.setLineWidth(lineWidth)
+    
+
     def evnImageListItemClicked(self, item):
         self.ui.label_selected_picture.setPixmap(QtGui.QPixmap(self.imageListPathDict[item.text()]))
+        self.imageLabelFrame(QFrame.StyledPanel,QFrame.Sunken,3)
 
     def evnImageListItemDoubleClicked(self, item):
         self.openImage(self.imageListPathDict[item.text()])
@@ -56,17 +65,32 @@ class MainWindow(QMainWindow):
         res = QFileDialog.getOpenFileNames(None, "Open File", "/", fileToOpen)
 
         if (len(res[0]) > 0):
-            print(res)
-            self.ui.label_selected_picture.setText("Please select image.")
+            # self.ui.label_selected_picture.setText("Please select image.")
+            self.ui.btn_clear_images.setEnabled(True)
+            self.ui.btn_clear_images.setStyleSheet("QPushButton {\n"
+                                                    "    color: rgb(160, 160, 160);\n"
+                                                    "}\n"
+                                                    "QPushButton:hover {\n"
+                                                    "    color: rgb(85, 170, 255);\n"
+                                                    "}")
+
 
         self.renderInputPictureList(res[0])
 
     def evnClearImagesButtonClicked(self):
         if(self.imageListPathDict and self.showDialog('Are you sure?')):
+            self.ui.btn_clear_images.setEnabled(False)
             self.ui.images_import_list.clear()
             self.imageListPathDict = {}
             self.ui.label_images.setText(f"Images: {self.ui.images_import_list.count()}")
+            self.imageLabelFrame(0,0,0)
             self.ui.label_selected_picture.setText("Please load and select image.")
+            self.ui.btn_clear_images.setStyleSheet("QPushButton {\n"
+                                                    "    color: rgb(100, 100, 100);\n"
+                                                    "}\n"
+                                                    "QPushButton:hover {\n"
+                                                    "    color: rgb(85, 170, 255);\n"
+                                                    "}")
         
     def showDialog(self, message):
         msgBox = QMessageBox()
@@ -85,7 +109,7 @@ class MainWindow(QMainWindow):
         if returnValue == QMessageBox.Ok:
             return True
         else: return False
-        
+
     def openImage(self, path):
         # imageViewerFromCommandLine = {'linux': 'xdg-open',
         #                               'win32': 'explorer',
