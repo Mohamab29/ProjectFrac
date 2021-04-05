@@ -5,6 +5,7 @@ import subprocess
 from PyQt5 import QtCore, QtGui, QtWidgets
 from ui_main import Ui_MainWindow
 from dialog import Ui_Dialog
+from PIL import Image
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -84,12 +85,14 @@ class MainWindow(QMainWindow):
         if returnValue == QMessageBox.Ok:
             return True
         else: return False
-
+git 
     def openImage(self, path):
-        imageViewerFromCommandLine = {'linux': 'xdg-open',
-                                      'win32': 'explorer',
-                                      'darwin': 'open'}[sys.platform]
-        subprocess.run([imageViewerFromCommandLine, path])
+        # imageViewerFromCommandLine = {'linux': 'xdg-open',
+        #                               'win32': 'explorer',
+        #                               'darwin': 'open'}[sys.platform]
+        # subprocess.run([imageViewerFromCommandLine, path])
+        image = Image.open(path, 'r')
+        image.show()
 
     def renderInputPictureList(self, pictures_input_path):
         if len(pictures_input_path) > 0:
