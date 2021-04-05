@@ -247,6 +247,16 @@ class Ui_MainWindow(object):
         self.btn_load_images.setFlat(False)
         self.btn_load_images.setObjectName("btn_load_images")
         self.horizontalLayout_4.addWidget(self.btn_load_images)
+        self.pushButton_2 = QtWidgets.QPushButton(self.frame_buttons)
+        self.pushButton_2.setEnabled(False)
+        self.pushButton_2.setStyleSheet("QPushButton {\n"
+"    color: rgb(100, 100, 100);\n"
+"}\n"
+"QPushButton:hover {\n"
+"    color: rgb(85, 170, 255);\n"
+"}")
+        self.pushButton_2.setObjectName("pushButton_2")
+        self.horizontalLayout_4.addWidget(self.pushButton_2)
         self.verticalLayout_7.addWidget(self.frame_buttons)
         self.stackedWidget.addWidget(self.page_1)
         self.page_2 = QtWidgets.QWidget()
@@ -377,7 +387,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
-        self.stackedWidget.setCurrentIndex(1)
+        self.stackedWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -391,6 +401,7 @@ class Ui_MainWindow(object):
         self.label_images.setText(_translate("MainWindow", "Images: 0"))
         self.btn_clear_images.setText(_translate("MainWindow", "Clear Image list"))
         self.btn_load_images.setText(_translate("MainWindow", "Load Images"))
+        self.pushButton_2.setText(_translate("MainWindow", "Send to predict"))
         self.label_images_2.setText(_translate("MainWindow", "Checked Images: 0"))
         self.btn_clear_images_2.setText(_translate("MainWindow", "Check All"))
         self.btn_load_images_2.setText(_translate("MainWindow", "Uncheck All"))

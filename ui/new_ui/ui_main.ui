@@ -336,7 +336,7 @@ QPushButton:hover {
           <item>
            <widget class="QStackedWidget" name="stackedWidget">
             <property name="currentIndex">
-             <number>1</number>
+             <number>0</number>
             </property>
             <widget class="QWidget" name="page_1">
              <layout class="QVBoxLayout" name="verticalLayout_7">
@@ -560,6 +560,24 @@ QPushButton:hover {
                    </property>
                    <property name="flat">
                     <bool>false</bool>
+                   </property>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QPushButton" name="pushButton_2">
+                   <property name="enabled">
+                    <bool>false</bool>
+                   </property>
+                   <property name="styleSheet">
+                    <string notr="true">QPushButton {
+	color: rgb(100, 100, 100);
+}
+QPushButton:hover {
+	color: rgb(85, 170, 255);
+}</string>
+                   </property>
+                   <property name="text">
+                    <string>Send to predict</string>
                    </property>
                   </widget>
                  </item>
