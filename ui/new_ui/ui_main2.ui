@@ -247,7 +247,7 @@ border: 0px solid;</string>
                </property>
                <property name="styleSheet">
                 <string notr="true">QPushButton {
-	color: rgb(160, 160, 160);
+	color: rgb(200, 200, 200);
 	background-color: rgb(35, 35, 35);
 	border: 0px solid;
 }
