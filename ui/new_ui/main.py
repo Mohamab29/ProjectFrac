@@ -102,6 +102,7 @@ class MainWindow(QMainWindow):
                 self.toggleButtonAndChangeStyle(self.ui.btn_uncheck_all,True)
                 self.toggleButtonAndChangeStyle(self.ui.btn_delete_selected_images,True)
 
+        self.ui.label_selected_picture.setText("Please select image.")
         self.updateNumOfImages()
 
     def evnDeleteSelectedImagesButtonClicked(self,item):
@@ -152,11 +153,11 @@ class MainWindow(QMainWindow):
             self.imageLabelFrame(0,0,0)
             self.ui.label_selected_picture.setText("Please load and select image.")
             self.changeButtonToDisableStyle(self.ui.btn_clear_images)
-            
+            self.toggleButtonAndChangeStyle(self.ui.btn_uncheck_all,False)
+            self.toggleButtonAndChangeStyle(self.ui.btn_check_all,False)
+            self.toggleButtonAndChangeStyle(self.ui.btn_predict,False)
+            self.toggleButtonAndChangeStyle(self.ui.btn_delete_selected_images,False)
 
-        self.toggleButtonAndChangeStyle(self.ui.btn_uncheck_all,False)
-        self.toggleButtonAndChangeStyle(self.ui.btn_check_all,False)
-        self.toggleButtonAndChangeStyle(self.ui.btn_predict,False)
 
 
 
