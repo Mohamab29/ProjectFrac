@@ -137,6 +137,8 @@ class MainWindow(QMainWindow):
                 self.toggleButtonAndChangeStyle(self.ui.btn_delete_selected_images,False)
 
             if not len(self.ui.images_import_list):
+                self.ui.label_selected_picture.setText("Please load and select image.")
+                self.imageLabelFrame(0,0,0)
                 self.toggleButtonAndChangeStyle(self.ui.btn_clear_images,False)
 
 
