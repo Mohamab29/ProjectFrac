@@ -102,7 +102,10 @@ class MainWindow(QMainWindow):
                 self.toggleButtonAndChangeStyle(self.ui.btn_uncheck_all,True)
                 self.toggleButtonAndChangeStyle(self.ui.btn_delete_selected_images,True)
 
-        self.ui.label_selected_picture.setText("Please select image.")
+        if len(self.ui.images_import_list.selectedItems()) == 0:
+            self.imageLabelFrame(0,0,0)
+            self.ui.label_selected_picture.setText("Please select image to view on the screen.")
+            
         self.updateNumOfImages()
 
     def evnDeleteSelectedImagesButtonClicked(self,item):
