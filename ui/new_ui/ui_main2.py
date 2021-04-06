@@ -93,6 +93,7 @@ class Ui_MainWindow(object):
         font.setBold(True)
         font.setWeight(75)
         self.btn_page_predict.setFont(font)
+        self.btn_page_predict.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.btn_page_predict.setStyleSheet("QPushButton {\n"
 "    color: rgb(160, 160, 160);\n"
 "    background-color: rgb(35, 35, 35);\n"
@@ -102,6 +103,7 @@ class Ui_MainWindow(object):
 "    color: rgb(85, 170, 255);\n"
 "}\n"
 "")
+        self.btn_page_predict.setAutoRepeat(False)
         self.btn_page_predict.setObjectName("btn_page_predict")
         self.verticalLayout_4.addWidget(self.btn_page_predict)
         self.verticalLayout_3.addWidget(self.frame_top_menus, 0, QtCore.Qt.AlignTop)
@@ -230,6 +232,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_12.setObjectName("verticalLayout_12")
         self.btn_check_all = QtWidgets.QPushButton(self.frame_pages_buttons_check_uncheck_images)
         self.btn_check_all.setEnabled(False)
+        self.btn_check_all.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.btn_check_all.setStyleSheet("QPushButton {\n"
 "    color: rgb(100, 100, 100);\n"
 "}\n"
@@ -240,6 +243,7 @@ class Ui_MainWindow(object):
         self.verticalLayout_12.addWidget(self.btn_check_all)
         self.btn_uncheck_all = QtWidgets.QPushButton(self.frame_pages_buttons_check_uncheck_images)
         self.btn_uncheck_all.setEnabled(False)
+        self.btn_uncheck_all.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.btn_uncheck_all.setStyleSheet("QPushButton {\n"
 "    color: rgb(100, 100, 100);\n"
 "}\n"
@@ -258,6 +262,7 @@ class Ui_MainWindow(object):
         self.btn_predict = QtWidgets.QPushButton(self.frame_pages_buttons_predict_button)
         self.btn_predict.setEnabled(False)
         self.btn_predict.setMinimumSize(QtCore.QSize(0, 56))
+        self.btn_predict.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.btn_predict.setStyleSheet("QPushButton {\n"
 "    color: rgb(100, 100, 100);\n"
 "}\n"

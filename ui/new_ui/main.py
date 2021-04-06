@@ -89,10 +89,11 @@ class MainWindow(QMainWindow):
                 self.setListItemItemStyle(listItem)
                 self.ui.images_import_list.addItem(listItem)
                 self.toggleButtonAndChangeStyle(self.ui.btn_predict,True)
+                self.toggleButtonAndChangeStyle(self.ui.btn_clear_images, True)
+                self.toggleButtonAndChangeStyle(self.ui.btn_uncheck_all,True)
 
         self.ui.label_images.setText(f"Images: {self.ui.images_import_list.count()} Checked: {self.numOfCheckedItems()}")
-        self.toggleButtonAndChangeStyle(self.ui.btn_clear_images, True)
-        self.toggleButtonAndChangeStyle(self.ui.btn_uncheck_all,True)
+
 
 
     def evnClearImagesButtonClicked(self):
