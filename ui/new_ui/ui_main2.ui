@@ -229,37 +229,7 @@ border: 0px solid;</string>
               <number>0</number>
              </property>
              <item>
-              <widget class="QPushButton" name="btn_page_1">
-               <property name="minimumSize">
-                <size>
-                 <width>0</width>
-                 <height>40</height>
-                </size>
-               </property>
-               <property name="font">
-                <font>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="styleSheet">
-                <string notr="true">QPushButton {
-	color: rgb(160, 160, 160);
-	background-color: rgb(35, 35, 35);
-	border: 0px solid;
-}
-QPushButton:hover {
-	color: rgb(85, 170, 255);
-}
-</string>
-               </property>
-               <property name="text">
-                <string>Load Images</string>
-               </property>
-              </widget>
-             </item>
-             <item>
-              <widget class="QPushButton" name="btn_page_2">
+              <widget class="QPushButton" name="btn_page_predict">
                <property name="minimumSize">
                 <size>
                  <width>0</width>
@@ -288,36 +258,6 @@ QPushButton:hover {
                </property>
               </widget>
              </item>
-             <item>
-              <widget class="QPushButton" name="btn_page_3">
-               <property name="minimumSize">
-                <size>
-                 <width>0</width>
-                 <height>40</height>
-                </size>
-               </property>
-               <property name="font">
-                <font>
-                 <weight>75</weight>
-                 <bold>true</bold>
-                </font>
-               </property>
-               <property name="styleSheet">
-                <string notr="true">QPushButton {
-	color: rgb(160, 160, 160);
-	background-color: rgb(35, 35, 35);
-	border: 0px solid;
-}
-QPushButton:hover {
-	color: rgb(85, 170, 255);
-}
-</string>
-               </property>
-               <property name="text">
-                <string>Info</string>
-               </property>
-              </widget>
-             </item>
             </layout>
            </widget>
           </item>
@@ -338,10 +278,10 @@ QPushButton:hover {
             <property name="currentIndex">
              <number>0</number>
             </property>
-            <widget class="QWidget" name="page_1">
+            <widget class="QWidget" name="main_page_predict">
              <layout class="QVBoxLayout" name="verticalLayout_7">
               <item>
-               <widget class="QFrame" name="frame_main_page1">
+               <widget class="QFrame" name="frame_main_page_predict">
                 <property name="frameShape">
                  <enum>QFrame::NoFrame</enum>
                 </property>
@@ -350,7 +290,7 @@ QPushButton:hover {
                 </property>
                 <layout class="QHBoxLayout" name="horizontalLayout_3">
                  <item>
-                  <widget class="QFrame" name="frame_picture">
+                  <widget class="QFrame" name="frame_main_page_predict_picture">
                    <property name="minimumSize">
                     <size>
                      <width>2</width>
@@ -381,7 +321,7 @@ QPushButton:hover {
                   </widget>
                  </item>
                  <item>
-                  <widget class="QFrame" name="frame_list">
+                  <widget class="QFrame" name="frame_main_page_predict_frame_list">
                    <property name="minimumSize">
                     <size>
                      <width>250</width>
@@ -483,7 +423,7 @@ QPushButton:hover {
                </widget>
               </item>
               <item>
-               <widget class="QFrame" name="frame_buttons">
+               <widget class="QFrame" name="frame_pages_buttons">
                 <property name="maximumSize">
                  <size>
                   <width>16777215</width>
@@ -498,7 +438,7 @@ QPushButton:hover {
                 </property>
                 <layout class="QHBoxLayout" name="horizontalLayout_8">
                  <item>
-                  <widget class="QFrame" name="frame_load_clear_images">
+                  <widget class="QFrame" name="frame_pages_buttons_load_clear_images">
                    <property name="frameShape">
                     <enum>QFrame::NoFrame</enum>
                    </property>
@@ -534,7 +474,7 @@ QPushButton:hover {
                       </property>
                       <property name="styleSheet">
                        <string notr="true">QPushButton {
-	color: rgb(160, 160, 160);
+	color: rgb(200, 200, 200);
 }
 QPushButton:hover {
 	color: rgb(85, 170, 255);
@@ -591,7 +531,7 @@ QPushButton:hover {
                   </widget>
                  </item>
                  <item>
-                  <widget class="QFrame" name="frame_check_uncheck_images">
+                  <widget class="QFrame" name="frame_pages_buttons_check_uncheck_images">
                    <property name="frameShape">
                     <enum>QFrame::NoFrame</enum>
                    </property>
@@ -639,7 +579,7 @@ QPushButton:hover {
                   </widget>
                  </item>
                  <item>
-                  <widget class="QFrame" name="frame_predict">
+                  <widget class="QFrame" name="frame_pages_buttons_predict_button">
                    <property name="frameShape">
                     <enum>QFrame::NoFrame</enum>
                    </property>
@@ -769,71 +709,6 @@ QPushButton:hover {
                     <property name="bottomMargin">
                      <number>0</number>
                     </property>
-                    <item alignment="Qt::AlignHCenter">
-                     <widget class="QLabel" name="label_images_2">
-                      <property name="minimumSize">
-                       <size>
-                        <width>0</width>
-                        <height>30</height>
-                       </size>
-                      </property>
-                      <property name="font">
-                       <font>
-                        <weight>75</weight>
-                        <italic>false</italic>
-                        <bold>true</bold>
-                        <underline>false</underline>
-                        <strikeout>false</strikeout>
-                        <kerning>true</kerning>
-                       </font>
-                      </property>
-                      <property name="styleSheet">
-                       <string notr="true">QLabel {color: rgb(255, 255, 255)}</string>
-                      </property>
-                      <property name="text">
-                       <string>Checked Images: 0</string>
-                      </property>
-                     </widget>
-                    </item>
-                    <item>
-                     <widget class="QListWidget" name="images_import_list_2">
-                      <property name="minimumSize">
-                       <size>
-                        <width>150</width>
-                        <height>0</height>
-                       </size>
-                      </property>
-                      <property name="styleSheet">
-                       <string notr="true">background-color: rgb(43, 43, 43);</string>
-                      </property>
-                      <property name="frameShape">
-                       <enum>QFrame::Panel</enum>
-                      </property>
-                      <property name="frameShadow">
-                       <enum>QFrame::Sunken</enum>
-                      </property>
-                      <property name="lineWidth">
-                       <number>1</number>
-                      </property>
-                      <property name="midLineWidth">
-                       <number>0</number>
-                      </property>
-                      <property name="showDropIndicator" stdset="0">
-                       <bool>true</bool>
-                      </property>
-                      <property name="dragEnabled">
-                       <bool>false</bool>
-                      </property>
-                      <item>
-                       <property name="text">
-                        <string>item</string>
-                       </property>
-                       <property name="checkState">
-                        <enum>Checked</enum>
-                       </property>
-                      </item>
-                     </widget>
-                    </item>
                    </layout>
                   </widget>
                  </item>
