@@ -43,6 +43,17 @@ class MainWindow(QMainWindow):
     def evnImageListItemClicked(self, item):
         self.ui.label_selected_picture.setPixmap(QtGui.QPixmap(self.imageListPathDict[item.text()]))
         self.imageLabelFrame(QFrame.StyledPanel,QFrame.Sunken,3)
+        
+        if not self.isAtLeastOneItemChecked():
+            self.toggleButtonAndChangeStyle(self.ui.btn_uncheck_all,False)
+        else:
+            self.toggleButtonAndChangeStyle(self.ui.btn_uncheck_all,True)
+
+        if self.isAtLeastOneItemNotChecked():
+            self.toggleButtonAndChangeStyle(self.ui.btn_check_all,True)
+        else:
+            self.toggleButtonAndChangeStyle(self.ui.btn_check_all,False)
+
 
     def evnImageListItemDoubleClicked(self, item):
         self.openImage(self.imageListPathDict[item.text()])
@@ -67,15 +78,10 @@ class MainWindow(QMainWindow):
         if (len(res[0]) > 0):
             # self.ui.label_selected_picture.setText("Please select image.")
             self.ui.btn_clear_images.setEnabled(True)
-            self.ui.btn_clear_images.setStyleSheet("QPushButton {\n"
-                                                    "    color: rgb(160, 160, 160);\n"
-                                                    "}\n"
-                                                    "QPushButton:hover {\n"
-                                                    "    color: rgb(85, 170, 255);\n"
-                                                    "}")
+            self.changeButtonToEnableStyle(self.ui.btn_clear_images)
+            self.renderInputPictureList(res[0])
 
 
-        self.renderInputPictureList(res[0])
 
     def evnClearImagesButtonClicked(self):
         if(self.imageListPathDict and self.showDialog('Are you sure?')):
@@ -85,12 +91,12 @@ class MainWindow(QMainWindow):
             self.ui.label_images.setText(f"Images: {self.ui.images_import_list.count()}")
             self.imageLabelFrame(0,0,0)
             self.ui.label_selected_picture.setText("Please load and select image.")
-            self.ui.btn_clear_images.setStyleSheet("QPushButton {\n"
-                                                    "    color: rgb(100, 100, 100);\n"
-                                                    "}\n"
-                                                    "QPushButton:hover {\n"
-                                                    "    color: rgb(85, 170, 255);\n"
-                                                    "}")
+            self.changeButtonToDisableStyle(self.ui.btn_clear_images)
+
+
+        self.toggleButtonAndChangeStyle(self.ui.btn_uncheck_all,False)
+
+
         
     def showDialog(self, message):
         msgBox = QMessageBox()
@@ -111,24 +117,22 @@ class MainWindow(QMainWindow):
         else: return False
 
     def openImage(self, path):
-        # imageViewerFromCommandLine = {'linux': 'xdg-open',
-        #                               'win32': 'explorer',
-        #                               'darwin': 'open'}[sys.platform]
-        # subprocess.run([imageViewerFromCommandLine, path])
         image = Image.open(path, 'r')
         image.show()
 
     def renderInputPictureList(self, pictures_input_path):
-        if len(pictures_input_path) > 0:
-            for i in range(len(pictures_input_path)):
-                if pictures_input_path[i].split('/')[-1] not in self.imageListPathDict:
-                    self.imageListPathDict[pictures_input_path[i].split('/')[-1]] = pictures_input_path[i]
-                    listItem = QtWidgets.QListWidgetItem()
-                    listItem.setCheckState(QtCore.Qt.Checked)
-                    listItem.setText(pictures_input_path[i].split('/')[-1])
-                    self.setListItemItemStyle(listItem)
-                    self.ui.images_import_list.addItem(listItem)
-            self.ui.label_images.setText(f"Images: {self.ui.images_import_list.count()}")
+        for i in range(len(pictures_input_path)):
+            if pictures_input_path[i].split('/')[-1] not in self.imageListPathDict:
+                self.imageListPathDict[pictures_input_path[i].split('/')[-1]] = pictures_input_path[i]
+                listItem = QtWidgets.QListWidgetItem()
+                listItem.setCheckState(QtCore.Qt.Checked)
+                listItem.setText(pictures_input_path[i].split('/')[-1])
+                self.setListItemItemStyle(listItem)
+                self.ui.images_import_list.addItem(listItem)
+        self.ui.label_images.setText(f"Images: {self.ui.images_import_list.count()}")
+
+        self.toggleButtonAndChangeStyle(self.ui.btn_uncheck_all,True)
+
 
     def setListItemItemStyle(self, item):
         font = QtGui.QFont()
@@ -140,12 +144,48 @@ class MainWindow(QMainWindow):
         item.setForeground(brush)
 
 
-    def isAllItemsChecked(self):
+    def isAtLeastOneItemChecked(self):
         for index in range(self.ui.images_import_list.count()):
-            if self.ui.images_import_list.item(index).checkState() != Qt.Checked:
+            if self.ui.images_import_list.item(index).checkState() == 2:
+                return True
+        return False
+
+    def isAtLeastOneItemNotChecked(self):
+        for index in range(self.ui.images_import_list.count()):
+            if self.ui.images_import_list.item(index).checkState() == 0:
+                return True
+        return False
+
+    def isNoItemChecked(self):
+        for index in range(self.ui.images_import_list.count()):
+            if self.ui.images_import_list.item(index).checkState() == 2:
                 return False
         return True
-        
+
+    def changeButtonToEnableStyle(self,btn):
+       btn.setStyleSheet("QPushButton {\n"
+                                        "    color: rgb(160, 160, 160);\n"
+                                        "}\n"
+                                        "QPushButton:hover {\n"
+                                        "    color: rgb(85, 170, 255);\n"
+                                        "}")
+    def changeButtonToDisableStyle(self,btn):
+       btn.setStyleSheet("QPushButton {\n"
+                                        "    color: rgb(100, 100, 100);\n"
+                                        "}\n"
+                                        "QPushButton:hover {\n"
+                                        "    color: rgb(85, 170, 255);\n"
+                                        "}")
+
+
+    def toggleButtonAndChangeStyle(self,btn,term):
+        if(not term):
+            btn.setEnabled(False)
+            self.changeButtonToDisableStyle(btn)
+        elif(term):
+            btn.setEnabled(True)
+            self.changeButtonToEnableStyle(btn)
+            
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = MainWindow()

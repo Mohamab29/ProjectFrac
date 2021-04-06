@@ -441,7 +441,7 @@ QPushButton:hover {
                        <string notr="true">QLabel {color: rgb(255, 255, 255)}</string>
                       </property>
                       <property name="text">
-                       <string>Images: 0</string>
+                       <string>Images: 0 Checked: 0</string>
                       </property>
                      </widget>
                     </item>
