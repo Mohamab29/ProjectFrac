@@ -116,6 +116,7 @@ class MainWindow(QMainWindow):
 
             for item in checked_items:                   
                 self.ui.images_import_list.takeItem(self.ui.images_import_list.row(item))
+                self.imageListPathDict.pop(item.text())
 
 
     def evnClearImagesButtonClicked(self):
