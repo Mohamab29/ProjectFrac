@@ -1,6 +1,6 @@
 # -*- coding: utf-8 -*-
 
-# Form implementation generated from reading ui file 'ui_main.ui'
+# Form implementation generated from reading ui file 'ui_main2.ui'
 #
 # Created by: PyQt5 UI code generator 5.15.4
 #
@@ -209,13 +209,36 @@ class Ui_MainWindow(object):
         self.horizontalLayout_3.addWidget(self.frame_list)
         self.verticalLayout_7.addWidget(self.frame_main_page1)
         self.frame_buttons = QtWidgets.QFrame(self.page_1)
-        self.frame_buttons.setMaximumSize(QtCore.QSize(16777215, 50))
+        self.frame_buttons.setMaximumSize(QtCore.QSize(16777215, 150))
         self.frame_buttons.setFrameShape(QtWidgets.QFrame.NoFrame)
         self.frame_buttons.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame_buttons.setObjectName("frame_buttons")
-        self.horizontalLayout_4 = QtWidgets.QHBoxLayout(self.frame_buttons)
+        self.verticalLayout_10 = QtWidgets.QVBoxLayout(self.frame_buttons)
+        self.verticalLayout_10.setObjectName("verticalLayout_10")
+        self.frame_5 = QtWidgets.QFrame(self.frame_buttons)
+        self.frame_5.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        self.frame_5.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.frame_5.setObjectName("frame_5")
+        self.horizontalLayout_4 = QtWidgets.QHBoxLayout(self.frame_5)
+        self.horizontalLayout_4.setContentsMargins(0, 0, 0, 0)
+        self.horizontalLayout_4.setSpacing(9)
         self.horizontalLayout_4.setObjectName("horizontalLayout_4")
-        self.btn_clear_images = QtWidgets.QPushButton(self.frame_buttons)
+        self.btn_load_images = QtWidgets.QPushButton(self.frame_5)
+        self.btn_load_images.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
+        self.btn_load_images.setLayoutDirection(QtCore.Qt.LeftToRight)
+        self.btn_load_images.setAutoFillBackground(False)
+        self.btn_load_images.setStyleSheet("QPushButton {\n"
+"    color: rgb(160, 160, 160);\n"
+"}\n"
+"QPushButton:hover {\n"
+"    color: rgb(85, 170, 255);\n"
+"}")
+        self.btn_load_images.setAutoDefault(False)
+        self.btn_load_images.setDefault(False)
+        self.btn_load_images.setFlat(False)
+        self.btn_load_images.setObjectName("btn_load_images")
+        self.horizontalLayout_4.addWidget(self.btn_load_images)
+        self.btn_clear_images = QtWidgets.QPushButton(self.frame_5)
         self.btn_clear_images.setEnabled(False)
         font = QtGui.QFont()
         font.setBold(False)
@@ -232,22 +255,36 @@ class Ui_MainWindow(object):
 "}")
         self.btn_clear_images.setObjectName("btn_clear_images")
         self.horizontalLayout_4.addWidget(self.btn_clear_images)
-        self.btn_load_images = QtWidgets.QPushButton(self.frame_buttons)
-        self.btn_load_images.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
-        self.btn_load_images.setLayoutDirection(QtCore.Qt.LeftToRight)
-        self.btn_load_images.setAutoFillBackground(False)
-        self.btn_load_images.setStyleSheet("QPushButton {\n"
-"    color: rgb(160, 160, 160);\n"
+        self.verticalLayout_10.addWidget(self.frame_5)
+        self.frame_6 = QtWidgets.QFrame(self.frame_buttons)
+        self.frame_6.setFrameShape(QtWidgets.QFrame.StyledPanel)
+        self.frame_6.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.frame_6.setObjectName("frame_6")
+        self.horizontalLayout_7 = QtWidgets.QHBoxLayout(self.frame_6)
+        self.horizontalLayout_7.setContentsMargins(0, 0, 0, 0)
+        self.horizontalLayout_7.setSpacing(9)
+        self.horizontalLayout_7.setObjectName("horizontalLayout_7")
+        self.pushButton_4 = QtWidgets.QPushButton(self.frame_6)
+        self.pushButton_4.setEnabled(False)
+        self.pushButton_4.setStyleSheet("QPushButton {\n"
+"    color: rgb(100, 100, 100);\n"
 "}\n"
 "QPushButton:hover {\n"
 "    color: rgb(85, 170, 255);\n"
 "}")
-        self.btn_load_images.setAutoDefault(False)
-        self.btn_load_images.setDefault(False)
-        self.btn_load_images.setFlat(False)
-        self.btn_load_images.setObjectName("btn_load_images")
-        self.horizontalLayout_4.addWidget(self.btn_load_images)
-        self.pushButton_2 = QtWidgets.QPushButton(self.frame_buttons)
+        self.pushButton_4.setObjectName("pushButton_4")
+        self.horizontalLayout_7.addWidget(self.pushButton_4)
+        self.pushButton_3 = QtWidgets.QPushButton(self.frame_6)
+        self.pushButton_3.setEnabled(False)
+        self.pushButton_3.setStyleSheet("QPushButton {\n"
+"    color: rgb(100, 100, 100);\n"
+"}\n"
+"QPushButton:hover {\n"
+"    color: rgb(85, 170, 255);\n"
+"}")
+        self.pushButton_3.setObjectName("pushButton_3")
+        self.horizontalLayout_7.addWidget(self.pushButton_3)
+        self.pushButton_2 = QtWidgets.QPushButton(self.frame_6)
         self.pushButton_2.setEnabled(False)
         self.pushButton_2.setStyleSheet("QPushButton {\n"
 "    color: rgb(100, 100, 100);\n"
@@ -256,7 +293,8 @@ class Ui_MainWindow(object):
 "    color: rgb(85, 170, 255);\n"
 "}")
         self.pushButton_2.setObjectName("pushButton_2")
-        self.horizontalLayout_4.addWidget(self.pushButton_2)
+        self.horizontalLayout_7.addWidget(self.pushButton_2)
+        self.verticalLayout_10.addWidget(self.frame_6)
         self.verticalLayout_7.addWidget(self.frame_buttons)
         self.stackedWidget.addWidget(self.page_1)
         self.page_2 = QtWidgets.QWidget()
@@ -395,7 +433,7 @@ class Ui_MainWindow(object):
         MainWindow.setCentralWidget(self.centralwidget)
 
         self.retranslateUi(MainWindow)
-        self.stackedWidget.setCurrentIndex(1)
+        self.stackedWidget.setCurrentIndex(0)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
     def retranslateUi(self, MainWindow):
@@ -407,9 +445,11 @@ class Ui_MainWindow(object):
         self.btn_page_3.setText(_translate("MainWindow", "Info"))
         self.label_selected_picture.setText(_translate("MainWindow", "Please load and select image."))
         self.label_images.setText(_translate("MainWindow", "Images: 0"))
-        self.btn_clear_images.setText(_translate("MainWindow", "Clear Image list"))
         self.btn_load_images.setText(_translate("MainWindow", "Load Images"))
-        self.pushButton_2.setText(_translate("MainWindow", "Send to predict"))
+        self.btn_clear_images.setText(_translate("MainWindow", "Clear Image list"))
+        self.pushButton_4.setText(_translate("MainWindow", "Check All"))
+        self.pushButton_3.setText(_translate("MainWindow", "Uncheck All"))
+        self.pushButton_2.setText(_translate("MainWindow", "Predict"))
         self.label_images_2.setText(_translate("MainWindow", "Checked Images: 0"))
         __sortingEnabled = self.images_import_list_2.isSortingEnabled()
         self.images_import_list_2.setSortingEnabled(False)

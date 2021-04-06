@@ -3,7 +3,7 @@ from ui_functions import *
 import sys
 import subprocess
 from PyQt5 import QtCore, QtGui, QtWidgets
-from ui_main import Ui_MainWindow
+from ui_main2 import Ui_MainWindow
 from dialog import Ui_Dialog
 from PIL import Image
 
@@ -124,6 +124,7 @@ class MainWindow(QMainWindow):
                 if pictures_input_path[i].split('/')[-1] not in self.imageListPathDict:
                     self.imageListPathDict[pictures_input_path[i].split('/')[-1]] = pictures_input_path[i]
                     listItem = QtWidgets.QListWidgetItem()
+                    listItem.setCheckState(QtCore.Qt.Checked)
                     listItem.setText(pictures_input_path[i].split('/')[-1])
                     self.setListItemItemStyle(listItem)
                     self.ui.images_import_list.addItem(listItem)
