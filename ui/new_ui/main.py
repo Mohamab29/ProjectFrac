@@ -71,7 +71,6 @@ class MainWindow(QMainWindow):
 
 
             
-
     def evnImageListItemDoubleClicked(self, item):
         self.openImage(self.imageListPathDict[item.text()])
 
@@ -108,7 +107,7 @@ class MainWindow(QMainWindow):
     def evnDeleteSelectedImagesButtonClicked(self,item):
         checked_items = []
 
-        if self.showDialog('Unchell all images','Are you sure?'):
+        if self.showDialog('Delete the selected images','Are you sure?'):
             for index in range(self.ui.images_import_list.count()):
                 if self.ui.images_import_list.item(index).checkState() == 2:
                     list_item = self.ui.images_import_list.item(index)
@@ -117,6 +116,29 @@ class MainWindow(QMainWindow):
             for item in checked_items:                   
                 self.ui.images_import_list.takeItem(self.ui.images_import_list.row(item))
                 self.imageListPathDict.pop(item.text())
+            
+            self.updateNumOfImages()
+
+            if not self.isAtLeastOneItemChecked():
+                self.toggleButtonAndChangeStyle(self.ui.btn_uncheck_all,False)
+            else:
+                self.toggleButtonAndChangeStyle(self.ui.btn_uncheck_all,True)
+
+            if self.isAtLeastOneItemNotChecked():
+                self.toggleButtonAndChangeStyle(self.ui.btn_check_all,True)
+            else:
+                self.toggleButtonAndChangeStyle(self.ui.btn_check_all,False)
+
+            if self.numOfCheckedItems():
+                self.toggleButtonAndChangeStyle(self.ui.btn_predict,True)
+                self.toggleButtonAndChangeStyle(self.ui.btn_delete_selected_images,True)
+            else:
+                self.toggleButtonAndChangeStyle(self.ui.btn_predict,False)
+                self.toggleButtonAndChangeStyle(self.ui.btn_delete_selected_images,False)
+
+            if not len(self.ui.images_import_list):
+                self.toggleButtonAndChangeStyle(self.ui.btn_clear_images,False)
+
 
 
     def evnClearImagesButtonClicked(self):
