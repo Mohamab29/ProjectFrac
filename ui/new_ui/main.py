@@ -140,6 +140,12 @@ class MainWindow(QMainWindow):
         item.setForeground(brush)
 
 
+    def isAllItemsChecked(self):
+        for index in range(self.ui.images_import_list.count()):
+            if self.ui.images_import_list.item(index).checkState() != Qt.Checked:
+                return False
+        return True
+        
 if __name__ == "__main__":
     app = QApplication(sys.argv)
     window = MainWindow()

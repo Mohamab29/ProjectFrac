@@ -496,30 +496,30 @@ QPushButton:hover {
                 <property name="frameShadow">
                  <enum>QFrame::Raised</enum>
                 </property>
-                <layout class="QVBoxLayout" name="verticalLayout_10">
+                <layout class="QHBoxLayout" name="horizontalLayout_8">
                  <item>
-                  <widget class="QFrame" name="frame_5">
+                  <widget class="QFrame" name="frame_load_clear_images">
                    <property name="frameShape">
-                    <enum>QFrame::StyledPanel</enum>
+                    <enum>QFrame::NoFrame</enum>
                    </property>
                    <property name="frameShadow">
                     <enum>QFrame::Raised</enum>
                    </property>
-                   <layout class="QHBoxLayout" name="horizontalLayout_4">
+                   <layout class="QVBoxLayout" name="verticalLayout_10">
                     <property name="spacing">
-                     <number>9</number>
+                     <number>6</number>
                     </property>
                     <property name="leftMargin">
-                     <number>0</number>
+                     <number>9</number>
                     </property>
                     <property name="topMargin">
-                     <number>0</number>
+                     <number>9</number>
                     </property>
                     <property name="rightMargin">
-                     <number>0</number>
+                     <number>9</number>
                     </property>
                     <property name="bottomMargin">
-                     <number>0</number>
+                     <number>9</number>
                     </property>
                     <item>
                      <widget class="QPushButton" name="btn_load_images">
@@ -591,31 +591,16 @@ QPushButton:hover {
                   </widget>
                  </item>
                  <item>
-                  <widget class="QFrame" name="frame_6">
+                  <widget class="QFrame" name="frame_check_uncheck_images">
                    <property name="frameShape">
-                    <enum>QFrame::StyledPanel</enum>
+                    <enum>QFrame::NoFrame</enum>
                    </property>
                    <property name="frameShadow">
                     <enum>QFrame::Raised</enum>
                    </property>
-                   <layout class="QHBoxLayout" name="horizontalLayout_7">
-                    <property name="spacing">
-                     <number>9</number>
-                    </property>
-                    <property name="leftMargin">
-                     <number>0</number>
-                    </property>
-                    <property name="topMargin">
-                     <number>0</number>
-                    </property>
-                    <property name="rightMargin">
-                     <number>0</number>
-                    </property>
-                    <property name="bottomMargin">
-                     <number>0</number>
-                    </property>
+                   <layout class="QVBoxLayout" name="verticalLayout_12">
                     <item>
-                     <widget class="QPushButton" name="pushButton_4">
+                     <widget class="QPushButton" name="btn_check_all">
                       <property name="enabled">
                        <bool>false</bool>
                       </property>
@@ -633,7 +618,7 @@ QPushButton:hover {
                      </widget>
                     </item>
                     <item>
-                     <widget class="QPushButton" name="pushButton_3">
+                     <widget class="QPushButton" name="btn_uncheck_all">
                       <property name="enabled">
                        <bool>false</bool>
                       </property>
@@ -650,10 +635,28 @@ QPushButton:hover {
                       </property>
                      </widget>
                     </item>
+                   </layout>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QFrame" name="frame_predict">
+                   <property name="frameShape">
+                    <enum>QFrame::NoFrame</enum>
+                   </property>
+                   <property name="frameShadow">
+                    <enum>QFrame::Raised</enum>
+                   </property>
+                   <layout class="QVBoxLayout" name="verticalLayout_13">
                     <item>
-                     <widget class="QPushButton" name="pushButton_2">
+                     <widget class="QPushButton" name="btn_predict">
                       <property name="enabled">
                        <bool>false</bool>
+                      </property>
+                      <property name="minimumSize">
+                       <size>
+                        <width>0</width>
+                        <height>56</height>
+                       </size>
                       </property>
                       <property name="styleSheet">
                        <string notr="true">QPushButton {
