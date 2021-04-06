@@ -95,7 +95,7 @@ class Ui_MainWindow(object):
         self.btn_page_predict.setFont(font)
         self.btn_page_predict.setCursor(QtGui.QCursor(QtCore.Qt.PointingHandCursor))
         self.btn_page_predict.setStyleSheet("QPushButton {\n"
-"    color: rgb(160, 160, 160);\n"
+"    color: rgb(200, 200, 200);\n"
 "    background-color: rgb(35, 35, 35);\n"
 "    border: 0px solid;\n"
 "}\n"
@@ -132,6 +132,7 @@ class Ui_MainWindow(object):
         self.frame_main_page_predict_picture.setFrameShadow(QtWidgets.QFrame.Raised)
         self.frame_main_page_predict_picture.setObjectName("frame_main_page_predict_picture")
         self.gridLayout = QtWidgets.QGridLayout(self.frame_main_page_predict_picture)
+        self.gridLayout.setContentsMargins(-1, -1, -1, 7)
         self.gridLayout.setObjectName("gridLayout")
         self.label_selected_picture = QtWidgets.QLabel(self.frame_main_page_predict_picture)
         self.label_selected_picture.setStyleSheet("QLabel {color: rgb(130, 130, 130)}")
@@ -253,6 +254,33 @@ class Ui_MainWindow(object):
         self.btn_uncheck_all.setObjectName("btn_uncheck_all")
         self.verticalLayout_12.addWidget(self.btn_uncheck_all)
         self.horizontalLayout_8.addWidget(self.frame_pages_buttons_check_uncheck_images)
+        self.frame_pages_buttons_delete = QtWidgets.QFrame(self.frame_pages_buttons)
+        self.frame_pages_buttons_delete.setFrameShape(QtWidgets.QFrame.NoFrame)
+        self.frame_pages_buttons_delete.setFrameShadow(QtWidgets.QFrame.Raised)
+        self.frame_pages_buttons_delete.setObjectName("frame_pages_buttons_delete")
+        self.verticalLayout_14 = QtWidgets.QVBoxLayout(self.frame_pages_buttons_delete)
+        self.verticalLayout_14.setObjectName("verticalLayout_14")
+        self.btn_delete_selected_images = QtWidgets.QPushButton(self.frame_pages_buttons_delete)
+        self.btn_delete_selected_images.setEnabled(False)
+        self.btn_delete_selected_images.setStyleSheet("QPushButton {\n"
+"    color: rgb(100, 100, 100);\n"
+"}\n"
+"QPushButton:hover {\n"
+"    color: rgb(85, 170, 255);\n"
+"}")
+        self.btn_delete_selected_images.setObjectName("btn_delete_selected_images")
+        self.verticalLayout_14.addWidget(self.btn_delete_selected_images)
+        self.pushButton_3 = QtWidgets.QPushButton(self.frame_pages_buttons_delete)
+        self.pushButton_3.setEnabled(False)
+        self.pushButton_3.setStyleSheet("QPushButton {\n"
+"    color: rgb(100, 100, 100);\n"
+"}\n"
+"QPushButton:hover {\n"
+"    color: rgb(85, 170, 255);\n"
+"}")
+        self.pushButton_3.setObjectName("pushButton_3")
+        self.verticalLayout_14.addWidget(self.pushButton_3)
+        self.horizontalLayout_8.addWidget(self.frame_pages_buttons_delete)
         self.frame_pages_buttons_predict_button = QtWidgets.QFrame(self.frame_pages_buttons)
         self.frame_pages_buttons_predict_button.setFrameShape(QtWidgets.QFrame.NoFrame)
         self.frame_pages_buttons_predict_button.setFrameShadow(QtWidgets.QFrame.Raised)
@@ -397,6 +425,8 @@ class Ui_MainWindow(object):
         self.btn_clear_images.setText(_translate("MainWindow", "Clear Image list"))
         self.btn_check_all.setText(_translate("MainWindow", "Check All"))
         self.btn_uncheck_all.setText(_translate("MainWindow", "Uncheck All"))
+        self.btn_delete_selected_images.setText(_translate("MainWindow", "Delete selected Images"))
+        self.pushButton_3.setText(_translate("MainWindow", "Button"))
         self.btn_predict.setText(_translate("MainWindow", "Predict"))
         self.btn_clear_images_2.setText(_translate("MainWindow", "Check All"))
         self.btn_load_images_2.setText(_translate("MainWindow", "Uncheck All"))

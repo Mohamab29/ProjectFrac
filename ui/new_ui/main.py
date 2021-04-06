@@ -32,6 +32,8 @@ class MainWindow(QMainWindow):
         self.ui.images_import_list.itemDoubleClicked.connect(self.evnImageListItemDoubleClicked)
         self.ui.btn_check_all.clicked.connect(self.evnCheckAllButtonClicked)
         self.ui.btn_uncheck_all.clicked.connect(self.evnUncheckAllButtonClicked)
+        self.ui.images_import_list.currentItemChanged.connect(self.evnCurrentItemChanged)
+        self.ui.btn_delete_selected_images.clicked.connect(self.evnDeleteSelectedImagesButtonClicked)
 
 
     def imageLabelFrame(self,frame1,frame2,lineWidth):
@@ -40,10 +42,13 @@ class MainWindow(QMainWindow):
         self.ui.label_selected_picture.setLineWidth(lineWidth)
     
 
+    def evnCurrentItemChanged(self, item):
+        if item:
+            self.ui.label_selected_picture.setPixmap(QtGui.QPixmap(self.imageListPathDict[item.text()]))
+            self.imageLabelFrame(QFrame.StyledPanel,QFrame.Sunken,3)
+        
     def evnImageListItemClicked(self, item):
-        self.ui.label_selected_picture.setPixmap(QtGui.QPixmap(self.imageListPathDict[item.text()]))
-        self.imageLabelFrame(QFrame.StyledPanel,QFrame.Sunken,3)
-        self.ui.label_images.setText(f"Images: {self.ui.images_import_list.count()} Checked: {self.numOfCheckedItems()}")
+        self.updateNumOfImages()
 
         
         if not self.isAtLeastOneItemChecked():
@@ -58,8 +63,13 @@ class MainWindow(QMainWindow):
 
         if self.numOfCheckedItems():
             self.toggleButtonAndChangeStyle(self.ui.btn_predict,True)
+            self.toggleButtonAndChangeStyle(self.ui.btn_delete_selected_images,True)
+
         else:
             self.toggleButtonAndChangeStyle(self.ui.btn_predict,False)
+            self.toggleButtonAndChangeStyle(self.ui.btn_delete_selected_images,False)
+
+
             
 
     def evnImageListItemDoubleClicked(self, item):
@@ -91,9 +101,21 @@ class MainWindow(QMainWindow):
                 self.toggleButtonAndChangeStyle(self.ui.btn_predict,True)
                 self.toggleButtonAndChangeStyle(self.ui.btn_clear_images, True)
                 self.toggleButtonAndChangeStyle(self.ui.btn_uncheck_all,True)
+                self.toggleButtonAndChangeStyle(self.ui.btn_delete_selected_images,True)
 
-        self.ui.label_images.setText(f"Images: {self.ui.images_import_list.count()} Checked: {self.numOfCheckedItems()}")
+        self.updateNumOfImages()
 
+    def evnDeleteSelectedImagesButtonClicked(self,item):
+        checked_items = []
+
+        if self.showDialog('Unchell all images','Are you sure?'):
+            for index in range(self.ui.images_import_list.count()):
+                if self.ui.images_import_list.item(index).checkState() == 2:
+                    list_item = self.ui.images_import_list.item(index)
+                    checked_items.append(list_item)
+
+            for item in checked_items:                   
+                self.ui.images_import_list.takeItem(self.ui.images_import_list.row(item))
 
 
     def evnClearImagesButtonClicked(self):
@@ -101,7 +123,7 @@ class MainWindow(QMainWindow):
             self.ui.btn_clear_images.setEnabled(False)
             self.ui.images_import_list.clear()
             self.imageListPathDict = {}
-            self.ui.label_images.setText(f"Images: {self.ui.images_import_list.count()} Checked: {self.numOfCheckedItems()}")
+            self.updateNumOfImages()
             self.imageLabelFrame(0,0,0)
             self.ui.label_selected_picture.setText("Please load and select image.")
             self.changeButtonToDisableStyle(self.ui.btn_clear_images)
@@ -121,7 +143,8 @@ class MainWindow(QMainWindow):
             self.toggleButtonAndChangeStyle(self.ui.btn_check_all,False)
             self.toggleButtonAndChangeStyle(self.ui.btn_uncheck_all,True)
             self.toggleButtonAndChangeStyle(self.ui.btn_predict,True)
-
+            self.toggleButtonAndChangeStyle(self.ui.btn_delete_selected_images,True)
+            self.updateNumOfImages()
 
 
     def evnUncheckAllButtonClicked(self,item):
@@ -133,6 +156,12 @@ class MainWindow(QMainWindow):
             self.toggleButtonAndChangeStyle(self.ui.btn_check_all,True)
             self.toggleButtonAndChangeStyle(self.ui.btn_uncheck_all,False)
             self.toggleButtonAndChangeStyle(self.ui.btn_predict,False)
+            self.toggleButtonAndChangeStyle(self.ui.btn_delete_selected_images,False)
+
+            self.updateNumOfImages()
+
+    def updateNumOfImages(self):
+        self.ui.label_images.setText(f"Images: {self.ui.images_import_list.count()} Checked: {self.numOfCheckedItems()}")
 
 
     def showDialog(self, title, message):

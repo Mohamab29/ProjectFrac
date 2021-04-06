@@ -310,6 +310,9 @@ QPushButton:hover {
                     <enum>QFrame::Raised</enum>
                    </property>
                    <layout class="QGridLayout" name="gridLayout">
+                    <property name="bottomMargin">
+                     <number>7</number>
+                    </property>
                     <item row="0" column="0" alignment="Qt::AlignHCenter">
                      <widget class="QLabel" name="label_selected_picture">
                       <property name="styleSheet">
@@ -584,6 +587,54 @@ QPushButton:hover {
                       </property>
                       <property name="text">
                        <string>Uncheck All</string>
+                      </property>
+                     </widget>
+                    </item>
+                   </layout>
+                  </widget>
+                 </item>
+                 <item>
+                  <widget class="QFrame" name="frame_pages_buttons_delete">
+                   <property name="frameShape">
+                    <enum>QFrame::NoFrame</enum>
+                   </property>
+                   <property name="frameShadow">
+                    <enum>QFrame::Raised</enum>
+                   </property>
+                   <layout class="QVBoxLayout" name="verticalLayout_14">
+                    <item>
+                     <widget class="QPushButton" name="btn_delete_selected_images">
+                      <property name="enabled">
+                       <bool>false</bool>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">QPushButton {
+	color: rgb(100, 100, 100);
+}
+QPushButton:hover {
+	color: rgb(85, 170, 255);
+}</string>
+                      </property>
+                      <property name="text">
+                       <string>Delete selected Images</string>
+                      </property>
+                     </widget>
+                    </item>
+                    <item>
+                     <widget class="QPushButton" name="pushButton_3">
+                      <property name="enabled">
+                       <bool>false</bool>
+                      </property>
+                      <property name="styleSheet">
+                       <string notr="true">QPushButton {
+	color: rgb(100, 100, 100);
+}
+QPushButton:hover {
+	color: rgb(85, 170, 255);
+}</string>
+                      </property>
+                      <property name="text">
+                       <string>Button</string>
                       </property>
                      </widget>
                     </item>
