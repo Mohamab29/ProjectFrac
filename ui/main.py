@@ -1,12 +1,9 @@
 from PyQt5.QtWidgets import QMainWindow, QApplication,QFileDialog,QMessageBox,QDesktopWidget,QFrame
-from ui_functions import *
 import sys
 import subprocess
 from PyQt5 import QtCore, QtGui, QtWidgets
-from ui_main2 import Ui_MainWindow
-from dialog import Ui_Dialog
+from ui_main import Ui_MainWindow
 from PIL import Image
-
 
 class MainWindow(QMainWindow):
     def __init__(self):
@@ -34,7 +31,18 @@ class MainWindow(QMainWindow):
         self.ui.btn_uncheck_all.clicked.connect(self.evnUncheckAllButtonClicked)
         self.ui.images_import_list.currentItemChanged.connect(self.evnCurrentItemChanged)
         self.ui.btn_delete_selected_images.clicked.connect(self.evnDeleteSelectedImagesButtonClicked)
+        self.ui.btn_predict.clicked.connect(self.evnPredictButtonClicked)
 
+        
+    def evnPredictButtonClicked(self):
+        checked_items = []
+
+        for index in range(self.ui.images_import_list.count()):
+            if self.ui.images_import_list.item(index).checkState() == 2:
+                list_item = self.ui.images_import_list.item(index)
+                checked_items.append(self.imageListPathDict[list_item.text()])
+
+        #test(checked_items)
 
     def imageLabelFrame(self,frame1,frame2,lineWidth):
         self.ui.label_selected_picture.setFrameShape(frame1)
@@ -78,7 +86,28 @@ class MainWindow(QMainWindow):
         self.ui.stackedWidget.setCurrentWidget(self.ui.main_page_predict)
 
     def evnBtnToggleClicked(self):
-        UIFunctions.toggleMenu(self, 250, True)
+        self.toggleMenu(250, True)
+
+    def toggleMenu(self, maxWidth, enable):
+        if enable:
+            # GET WIDTH
+            width = self.ui.frame_left_menu.width()
+            maxExtend = maxWidth
+            standard = 100
+
+            # SET MAX WIDTH
+            if width == 100:
+                widthExtended = maxExtend
+            else:
+                widthExtended = standard
+
+            # ANIMATION
+            self.animation = QtCore.QPropertyAnimation(self.ui.frame_left_menu, b"minimumWidth")
+            self.animation.setDuration(400)
+            self.animation.setStartValue(width)
+            self.animation.setEndValue(widthExtended)
+            self.animation.setEasingCurve(QtCore.QEasingCurve.InOutQuart)
+            self.animation.start()
 
     def evnLoadImagesButtonClicked(self):
         fileToOpen = "Image Files (*.png *.jpg *.bmp)"
