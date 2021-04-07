@@ -116,7 +116,7 @@ class MainWindow(QMainWindow):
             self.ui.label_selected_picture.setPixmap(QtGui.QPixmap(self.imageListPathDict[item.text()]))
             self.imageLabelFrame(QFrame.StyledPanel, QFrame.Sunken, 3)
 
-    def evnImageListItemClicked(self, item):
+    def evnImageListItemClicked(self):
         self.updateNumOfImages()
 
         if not self.isAtLeastOneItemChecked():
@@ -194,7 +194,7 @@ class MainWindow(QMainWindow):
 
         self.updateNumOfImages()
 
-    def evnDeleteSelectedImagesButtonClicked(self, item):
+    def evnDeleteSelectedImagesButtonClicked(self):
         checked_items = []
 
         if showDialog('Delete the selected images', 'Are you sure?'):
@@ -245,7 +245,7 @@ class MainWindow(QMainWindow):
             toggleButtonAndChangeStyle(self.ui.btn_predict, False)
             toggleButtonAndChangeStyle(self.ui.btn_delete_selected_images, False)
 
-    def evnCheckAllButtonClicked(self, item):
+    def evnCheckAllButtonClicked(self):
         if showDialog('Check all images', 'Are you sure?'):
             for index in range(self.ui.images_import_list.count()):
                 if self.ui.images_import_list.item(index).checkState() == 0:
@@ -256,7 +256,7 @@ class MainWindow(QMainWindow):
             toggleButtonAndChangeStyle(self.ui.btn_delete_selected_images, True)
             self.updateNumOfImages()
 
-    def evnUncheckAllButtonClicked(self, item):
+    def evnUncheckAllButtonClicked(self):
         if showDialog('Uncheck all images', 'Are you sure?'):
             for index in range(self.ui.images_import_list.count()):
                 if self.ui.images_import_list.item(index).checkState() == 2:
