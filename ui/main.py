@@ -85,6 +85,7 @@ class MainWindow(QMainWindow):
 
     def setActions(self):
         self.ui.btn_page_predict.clicked.connect(self.evnPage1BtnClicked)
+        self.ui.btn_page_results.clicked.connect(self.evnPageResultsClicked)
         self.ui.btn_Toggle.clicked.connect(self.evnBtnToggleClicked)
         self.ui.btn_load_images.clicked.connect(self.evnLoadImagesButtonClicked)
         self.ui.btn_clear_images.clicked.connect(self.evnClearImagesButtonClicked)
@@ -145,6 +146,9 @@ class MainWindow(QMainWindow):
 
     def evnPage1BtnClicked(self):
         self.ui.stackedWidget.setCurrentWidget(self.ui.main_page_predict)
+
+    def evnPageResultsClicked(self):
+        self.ui.stackedWidget.setCurrentWidget(self.ui.page_results)
 
     def evnBtnToggleClicked(self):
         self.toggleMenu(250, True)
