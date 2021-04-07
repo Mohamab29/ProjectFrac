@@ -116,7 +116,7 @@ class MainWindow(QMainWindow):
             self.ui.label_selected_picture.setPixmap(QtGui.QPixmap(self.imageListPathDict[item.text()]))
             self.imageLabelFrame(QFrame.StyledPanel, QFrame.Sunken, 3)
 
-    def evnImageListItemClicked(self):
+    def sharedTerms(self):
         self.updateNumOfImages()
 
         if not self.isAtLeastOneItemChecked():
@@ -136,6 +136,9 @@ class MainWindow(QMainWindow):
         else:
             toggleButtonAndChangeStyle(self.ui.btn_predict, False)
             toggleButtonAndChangeStyle(self.ui.btn_delete_selected_images, False)
+
+    def evnImageListItemClicked(self):
+        self.sharedTerms()
 
     def evnImageListItemDoubleClicked(self, item):
         openImage(self.imageListPathDict[item.text()])
@@ -207,24 +210,7 @@ class MainWindow(QMainWindow):
                 self.ui.images_import_list.takeItem(self.ui.images_import_list.row(item))
                 self.imageListPathDict.pop(item.text())
 
-            self.updateNumOfImages()
-
-            if not self.isAtLeastOneItemChecked():
-                toggleButtonAndChangeStyle(self.ui.btn_uncheck_all, False)
-            else:
-                toggleButtonAndChangeStyle(self.ui.btn_uncheck_all, True)
-
-            if self.isAtLeastOneItemNotChecked():
-                toggleButtonAndChangeStyle(self.ui.btn_check_all, True)
-            else:
-                toggleButtonAndChangeStyle(self.ui.btn_check_all, False)
-
-            if self.numOfCheckedItems():
-                toggleButtonAndChangeStyle(self.ui.btn_predict, True)
-                toggleButtonAndChangeStyle(self.ui.btn_delete_selected_images, True)
-            else:
-                toggleButtonAndChangeStyle(self.ui.btn_predict, False)
-                toggleButtonAndChangeStyle(self.ui.btn_delete_selected_images, False)
+            self.sharedTerms()
 
             if not len(self.ui.images_import_list):
                 self.ui.label_selected_picture.setText("Please load and select image.")
@@ -236,7 +222,6 @@ class MainWindow(QMainWindow):
             self.ui.btn_clear_images.setEnabled(False)
             self.ui.images_import_list.clear()
             self.imageListPathDict = {}
-            self.updateNumOfImages()
             self.imageLabelFrame(0, 0, 0)
             self.ui.label_selected_picture.setText("Please load and select image.")
             changeButtonToDisableStyle(self.ui.btn_clear_images)
@@ -244,6 +229,7 @@ class MainWindow(QMainWindow):
             toggleButtonAndChangeStyle(self.ui.btn_check_all, False)
             toggleButtonAndChangeStyle(self.ui.btn_predict, False)
             toggleButtonAndChangeStyle(self.ui.btn_delete_selected_images, False)
+            self.updateNumOfImages()
 
     def evnCheckAllButtonClicked(self):
         if showDialog('Check all images', 'Are you sure?'):
@@ -266,7 +252,6 @@ class MainWindow(QMainWindow):
             toggleButtonAndChangeStyle(self.ui.btn_uncheck_all, False)
             toggleButtonAndChangeStyle(self.ui.btn_predict, False)
             toggleButtonAndChangeStyle(self.ui.btn_delete_selected_images, False)
-
             self.updateNumOfImages()
 
     def updateNumOfImages(self):
