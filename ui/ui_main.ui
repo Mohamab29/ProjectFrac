@@ -106,7 +106,7 @@
            <number>0</number>
           </property>
           <item>
-           <widget class="QPushButton" name="btn_Toggle">
+           <widget class="QPushButton" name="btn_toggle">
             <property name="sizePolicy">
              <sizepolicy hsizetype="Expanding" vsizetype="Expanding">
               <horstretch>0</horstretch>
@@ -378,12 +378,12 @@ QPushButton:hover {
           <item>
            <widget class="QStackedWidget" name="stackedWidget">
             <property name="currentIndex">
-             <number>1</number>
+             <number>0</number>
             </property>
-            <widget class="QWidget" name="main_page_predict">
+            <widget class="QWidget" name="frame_predict_page">
              <layout class="QVBoxLayout" name="verticalLayout_7">
               <item>
-               <widget class="QFrame" name="frame_main_page_predict">
+               <widget class="QFrame" name="frame_predict_page_up">
                 <property name="frameShape">
                  <enum>QFrame::NoFrame</enum>
                 </property>
@@ -392,7 +392,7 @@ QPushButton:hover {
                 </property>
                 <layout class="QHBoxLayout" name="horizontalLayout_3">
                  <item>
-                  <widget class="QFrame" name="frame_main_page_predict_picture">
+                  <widget class="QFrame" name="frame_predict_page_up_image">
                    <property name="minimumSize">
                     <size>
                      <width>2</width>
@@ -410,7 +410,7 @@ QPushButton:hover {
                      <number>7</number>
                     </property>
                     <item row="0" column="0" alignment="Qt::AlignHCenter">
-                     <widget class="QLabel" name="label_selected_picture">
+                     <widget class="QLabel" name="label_predict_page_selected_picture">
                       <property name="styleSheet">
                        <string notr="true">QLabel {color: rgb(130, 130, 130)}</string>
                       </property>
@@ -426,7 +426,7 @@ QPushButton:hover {
                   </widget>
                  </item>
                  <item>
-                  <widget class="QFrame" name="frame_main_page_predict_frame_list">
+                  <widget class="QFrame" name="frame_predict_page_up_list">
                    <property name="minimumSize">
                     <size>
                      <width>250</width>
@@ -465,7 +465,7 @@ QPushButton:hover {
                      <number>0</number>
                     </property>
                     <item alignment="Qt::AlignHCenter">
-                     <widget class="QLabel" name="label_images">
+                     <widget class="QLabel" name="label_predict_page_images">
                       <property name="minimumSize">
                        <size>
                         <width>0</width>
@@ -491,7 +491,7 @@ QPushButton:hover {
                      </widget>
                     </item>
                     <item>
-                     <widget class="QListWidget" name="images_import_list">
+                     <widget class="QListWidget" name="images_predict_page_import_list">
                       <property name="minimumSize">
                        <size>
                         <width>150</width>
@@ -528,7 +528,7 @@ QPushButton:hover {
                </widget>
               </item>
               <item>
-               <widget class="QFrame" name="frame_pages_buttons">
+               <widget class="QFrame" name="frame_predict_page_buttons">
                 <property name="maximumSize">
                  <size>
                   <width>16777215</width>
@@ -543,7 +543,7 @@ QPushButton:hover {
                 </property>
                 <layout class="QHBoxLayout" name="horizontalLayout_8">
                  <item>
-                  <widget class="QFrame" name="frame_pages_buttons_load_clear_images">
+                  <widget class="QFrame" name="frame_predict_page_buttons_load_clear_images">
                    <property name="frameShape">
                     <enum>QFrame::NoFrame</enum>
                    </property>
@@ -567,7 +567,7 @@ QPushButton:hover {
                      <number>9</number>
                     </property>
                     <item>
-                     <widget class="QPushButton" name="btn_load_images">
+                     <widget class="QPushButton" name="btn_predict_page_load_images">
                       <property name="cursor">
                        <cursorShape>PointingHandCursor</cursorShape>
                       </property>
@@ -600,7 +600,7 @@ QPushButton:hover {
                      </widget>
                     </item>
                     <item>
-                     <widget class="QPushButton" name="btn_clear_images">
+                     <widget class="QPushButton" name="btn_predict_page_clear_images">
                       <property name="enabled">
                        <bool>false</bool>
                       </property>
@@ -636,7 +636,7 @@ QPushButton:hover {
                   </widget>
                  </item>
                  <item>
-                  <widget class="QFrame" name="frame_pages_buttons_check_uncheck_images">
+                  <widget class="QFrame" name="frame_predict_page_buttons_check_uncheck_images">
                    <property name="frameShape">
                     <enum>QFrame::NoFrame</enum>
                    </property>
@@ -645,7 +645,7 @@ QPushButton:hover {
                    </property>
                    <layout class="QVBoxLayout" name="verticalLayout_12">
                     <item>
-                     <widget class="QPushButton" name="btn_check_all">
+                     <widget class="QPushButton" name="btn_predict_page_check_all">
                       <property name="enabled">
                        <bool>false</bool>
                       </property>
@@ -666,7 +666,7 @@ QPushButton:hover {
                      </widget>
                     </item>
                     <item>
-                     <widget class="QPushButton" name="btn_uncheck_all">
+                     <widget class="QPushButton" name="btn_predict_page_uncheck_all">
                       <property name="enabled">
                        <bool>false</bool>
                       </property>
@@ -690,7 +690,7 @@ QPushButton:hover {
                   </widget>
                  </item>
                  <item>
-                  <widget class="QFrame" name="frame_pages_buttons_delete">
+                  <widget class="QFrame" name="frame_predict_page_buttons_delete">
                    <property name="frameShape">
                     <enum>QFrame::NoFrame</enum>
                    </property>
@@ -699,7 +699,7 @@ QPushButton:hover {
                    </property>
                    <layout class="QVBoxLayout" name="verticalLayout_14">
                     <item>
-                     <widget class="QPushButton" name="btn_delete_selected_images">
+                     <widget class="QPushButton" name="btn_predict_page_delete_selected_images">
                       <property name="enabled">
                        <bool>false</bool>
                       </property>
@@ -738,7 +738,7 @@ QPushButton:hover {
                   </widget>
                  </item>
                  <item>
-                  <widget class="QFrame" name="frame_pages_buttons_predict_button">
+                  <widget class="QFrame" name="frame_predict_page_buttons_predict_button">
                    <property name="frameShape">
                     <enum>QFrame::NoFrame</enum>
                    </property>
@@ -747,7 +747,7 @@ QPushButton:hover {
                    </property>
                    <layout class="QVBoxLayout" name="verticalLayout_13">
                     <item>
-                     <widget class="QPushButton" name="btn_predict">
+                     <widget class="QPushButton" name="btn_predict_page_predict">
                       <property name="enabled">
                        <bool>false</bool>
                       </property>
@@ -781,10 +781,10 @@ QPushButton:hover {
               </item>
              </layout>
             </widget>
-            <widget class="QWidget" name="page_results">
+            <widget class="QWidget" name="frame_results_page">
              <layout class="QVBoxLayout" name="verticalLayout_6">
               <item>
-               <widget class="QFrame" name="frame_2">
+               <widget class="QFrame" name="frame_results_page_up">
                 <property name="frameShape">
                  <enum>QFrame::NoFrame</enum>
                 </property>
@@ -793,7 +793,7 @@ QPushButton:hover {
                 </property>
                 <layout class="QHBoxLayout" name="horizontalLayout_6">
                  <item>
-                  <widget class="QFrame" name="frame_3">
+                  <widget class="QFrame" name="frame_results_page_up_image">
                    <property name="frameShape">
                     <enum>QFrame::NoFrame</enum>
                    </property>
@@ -820,7 +820,7 @@ QPushButton:hover {
                      <number>0</number>
                     </property>
                     <item row="0" column="0" alignment="Qt::AlignHCenter|Qt::AlignVCenter">
-                     <widget class="QLabel" name="label_selected_picture_4">
+                     <widget class="QLabel" name="label_results_page_selected_picture">
                       <property name="styleSheet">
                        <string notr="true">QLabel {color: rgb(130, 130, 130)}</string>
                       </property>
@@ -836,7 +836,7 @@ QPushButton:hover {
                   </widget>
                  </item>
                  <item>
-                  <widget class="QFrame" name="frame_4">
+                  <widget class="QFrame" name="frame_results_page_up_list">
                    <property name="minimumSize">
                     <size>
                      <width>250</width>
@@ -872,7 +872,7 @@ QPushButton:hover {
                      <number>0</number>
                     </property>
                     <item alignment="Qt::AlignHCenter">
-                     <widget class="QLabel" name="label_2">
+                     <widget class="QLabel" name="label_results_page_images">
                       <property name="minimumSize">
                        <size>
                         <width>0</width>
@@ -894,7 +894,7 @@ QPushButton:hover {
                      </widget>
                     </item>
                     <item>
-                     <widget class="QListWidget" name="listWidget">
+                     <widget class="QListWidget" name="images_results_page_import_list">
                       <property name="styleSheet">
                        <string notr="true">background-color: rgb(43, 43, 43);</string>
                       </property>
@@ -910,7 +910,7 @@ QPushButton:hover {
                </widget>
               </item>
               <item>
-               <widget class="QFrame" name="frame">
+               <widget class="QFrame" name="frame_results_page_buttons">
                 <property name="maximumSize">
                  <size>
                   <width>16777215</width>
@@ -925,7 +925,7 @@ QPushButton:hover {
                 </property>
                 <layout class="QHBoxLayout" name="horizontalLayout_5">
                  <item>
-                  <widget class="QFrame" name="frame_6">
+                  <widget class="QFrame" name="frame_results_page_buttons_save_and_clear_images">
                    <property name="frameShape">
                     <enum>QFrame::NoFrame</enum>
                    </property>
@@ -934,7 +934,7 @@ QPushButton:hover {
                    </property>
                    <layout class="QVBoxLayout" name="verticalLayout_17">
                     <item>
-                     <widget class="QPushButton" name="pushButton_2">
+                     <widget class="QPushButton" name="btn_results_page_save_images_and_csvs">
                       <property name="enabled">
                        <bool>false</bool>
                       </property>
@@ -952,7 +952,7 @@ QPushButton:hover {
                      </widget>
                     </item>
                     <item>
-                     <widget class="QPushButton" name="pushButton">
+                     <widget class="QPushButton" name="btn_results_page_clear_images">
                       <property name="enabled">
                        <bool>false</bool>
                       </property>
@@ -973,7 +973,7 @@ QPushButton:hover {
                   </widget>
                  </item>
                  <item>
-                  <widget class="QFrame" name="frame_8">
+                  <widget class="QFrame" name="frame_results_page_buttons_save_images_and_csvs">
                    <property name="frameShape">
                     <enum>QFrame::NoFrame</enum>
                    </property>
@@ -982,7 +982,7 @@ QPushButton:hover {
                    </property>
                    <layout class="QVBoxLayout" name="verticalLayout_19">
                     <item>
-                     <widget class="QPushButton" name="pushButton_5">
+                     <widget class="QPushButton" name="btn_results_page_save_images">
                       <property name="enabled">
                        <bool>false</bool>
                       </property>
@@ -1000,7 +1000,7 @@ QPushButton:hover {
                      </widget>
                     </item>
                     <item>
-                     <widget class="QPushButton" name="pushButton_4">
+                     <widget class="QPushButton" name="btn_results_page_save_csvs">
                       <property name="enabled">
                        <bool>false</bool>
                       </property>
@@ -1021,7 +1021,7 @@ QPushButton:hover {
                   </widget>
                  </item>
                  <item>
-                  <widget class="QFrame" name="frame_7">
+                  <widget class="QFrame" name="frame_results_page_buttons_check_uncheck_images">
                    <property name="frameShape">
                     <enum>QFrame::NoFrame</enum>
                    </property>
@@ -1030,7 +1030,7 @@ QPushButton:hover {
                    </property>
                    <layout class="QVBoxLayout" name="verticalLayout_18">
                     <item>
-                     <widget class="QPushButton" name="pushButton_7">
+                     <widget class="QPushButton" name="btn_results_page_check_all">
                       <property name="enabled">
                        <bool>false</bool>
                       </property>
@@ -1048,7 +1048,7 @@ QPushButton:hover {
                      </widget>
                     </item>
                     <item>
-                     <widget class="QPushButton" name="pushButton_6">
+                     <widget class="QPushButton" name="btn_results_page_uncheck_all">
                       <property name="enabled">
                        <bool>false</bool>
                       </property>
@@ -1069,7 +1069,7 @@ QPushButton:hover {
                   </widget>
                  </item>
                  <item>
-                  <widget class="QFrame" name="frame_5">
+                  <widget class="QFrame" name="frame_results_page_buttons_delete">
                    <property name="frameShape">
                     <enum>QFrame::NoFrame</enum>
                    </property>
@@ -1078,7 +1078,7 @@ QPushButton:hover {
                    </property>
                    <layout class="QVBoxLayout" name="verticalLayout_16">
                     <item>
-                     <widget class="QPushButton" name="pushButton_9">
+                     <widget class="QPushButton" name="btn_results_page_delete_selected_images">
                       <property name="enabled">
                        <bool>false</bool>
                       </property>
@@ -1121,7 +1121,7 @@ QPushButton:hover {
               </item>
              </layout>
             </widget>
-            <widget class="QWidget" name="page_3">
+            <widget class="QWidget" name="frame_help_page">
              <layout class="QVBoxLayout" name="verticalLayout_8">
               <item>
                <widget class="QLabel" name="label">
@@ -1134,7 +1134,7 @@ QPushButton:hover {
                  <string notr="true">color: #FFF;</string>
                 </property>
                 <property name="text">
-                 <string>PAGE 3</string>
+                 <string>Help Page</string>
                 </property>
                 <property name="alignment">
                  <set>Qt::AlignCenter</set>
