@@ -19,7 +19,7 @@ SEED = 42
 desired_size = 256
 
 
-def image_resize(img, d_size=desired_size):
+def image_resize(img: object, d_size: object = desired_size) -> object:
     """
     :arg:the desired size if we want to change it
     making the padding for each image and then resizing it
@@ -33,6 +33,10 @@ def image_resize(img, d_size=desired_size):
     new_size = tuple([int(x * ratio) for x in old_size])
 
     # new_size should be in (width, height) format
+    # print(type(img))
+    # print(img.shape)
+    # print(new_size)
+    # display(img, title="a test")
 
     img = cv2.resize(img, (new_size[1], new_size[0]))
 
@@ -81,4 +85,4 @@ def load_images(path, re_size=False):
 
         images.append(image)
     print_time(s_time, f"done loading images from {folder_name} folder")
-    return np.asarray(images, dtype="object")
+    return np.asarray(images, dtype="object")  # dtype="object"

@@ -23,7 +23,7 @@ def summarize_diagnostics(history, model_record):
     :returns model_record: updated dictionary with the relevant data.
     """
     f, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 4))
-    t = f.suptitle('Regular Performance with no augmentation', fontsize=12)
+    t = f.suptitle('Performance with hand made masks - no augmentation', fontsize=12)
     # f.subplots_adjust(top=0.85, wspace=0.3)
 
     max_epoch = len(history.history['accuracy']) + 1
@@ -159,19 +159,19 @@ def test():
     """
     start_time = time()
     models_records = pd.read_csv(RECORDS_FILE)
-    model_name: str = models_records["name"][8]  # a model name to run - in csv file index - 2
+    model_name: str = models_records["name"][9]  # a model name to run - in csv file index - 2
 
     print("Loading the model")
     model = load_model(f'trained_models/{model_name}.h5')
     print("Finished Loading the model")
-    random_index = 3  # random.randint(0, 4)
+    random_index = 5  # random.randint(0, 4)
     test_images = load_images(TEST_IMAGES_PATH)
     test_masks = load_images(TEST_MASKS_PATH)
 
     print(f"predicting a mask for a test image with index {random_index}")
 
     image = image_resize(test_images[random_index], d_size=1024)
-    mask = image_resize(test_masks[random_index], d_size=1024)
+    # mask = image_resize(test_masks[random_index], d_size=1024)
 
     # splitting an image into (4,4,256,256) => meaning we will have 16 images each is (256,256)
     split_images = view_as_windows(image, window_shape=(256, 256), step=256)
@@ -208,12 +208,12 @@ def test():
     # kernel = np.ones((3, 3), np.uint8)
     # image_pred = cv2.morphologyEx(image_pred, cv2.MORPH_CLOSE, kernel)
     image_pred = pred.copy()
-    image_pred[pred > 0] = 255
+    image_pred[pred > 0.5] = 255
     image_pred = crop_image(image_pred)
     cv2.imwrite(TEST_PREDS_PATH + str(random_index) + f"_{model_name}.png", image_pred)
 
     display(test_images[random_index], 'Original Image')
-    display(test_masks[random_index], 'Ground truth Mask')
+    # display(test_masks[random_index], 'Ground truth Mask')
     display(image_pred, 'Prediction')
 
     """
