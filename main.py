@@ -4,8 +4,7 @@ from keras.models import load_model
 import cv2
 import tensorflow as tf
 import pandas as pd
-from skimage.util.shape import view_as_windows
-from patchify_and_augment import patch_making
+from patchify_and_augment import patch_making, patches_for_prediction, repatch_prediction
 from sklearn.model_selection import train_test_split
 
 TEST_IMAGES_PATH = './dataset/test/images/'
@@ -23,7 +22,7 @@ def summarize_diagnostics(history, model_record):
     :returns model_record: updated dictionary with the relevant data.
     """
     f, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 4))
-    t = f.suptitle('Performance with hand made masks - no augmentation', fontsize=12)
+    t = f.suptitle('augmented without flipping by 45 and 90 degrees', fontsize=12)
     # f.subplots_adjust(top=0.85, wspace=0.3)
 
     max_epoch = len(history.history['accuracy']) + 1
@@ -88,7 +87,7 @@ def train():
     curr_time, curr_date = get_current_date_time()  # time and date of when the script was run
 
     model_name = f"model_{curr_time}_{curr_date}"
-    augmented = "No"  # Yes / No
+    augmented = "Yes"  # Yes / No
 
     model_record = {
         "name": model_name,
@@ -121,7 +120,7 @@ def train():
 
     # For evaluating the model
     callbacks = [
-        # tf.keras.callbacks.EarlyStopping(patience=3, monitor='val_loss'),
+        # tf.keras.callbacks.EarlyStopping(patience=2, monitor='val_loss'),
         tf.keras.callbacks.TensorBoard(log_dir=f'logs/logs_{model_name}')
     ]
 
@@ -131,7 +130,7 @@ def train():
         y=y_train,
         batch_size=10,
         verbose=1,
-        epochs=25,
+        epochs=20,
         validation_data=(x_val, y_val),
         callbacks=callbacks
     )
@@ -159,7 +158,7 @@ def test():
     """
     start_time = time()
     models_records = pd.read_csv(RECORDS_FILE)
-    model_name: str = models_records["name"][9]  # a model name to run - in csv file index - 2
+    model_name: str = models_records["name"][12]  # a model name to run - in csv file index - 2
 
     print("Loading the model")
     model = load_model(f'trained_models/{model_name}.h5')
@@ -170,28 +169,21 @@ def test():
 
     print(f"predicting a mask for a test image with index {random_index}")
 
-    image = image_resize(test_images[random_index], d_size=1024)
-    # mask = image_resize(test_masks[random_index], d_size=1024)
-
-    # splitting an image into (4,4,256,256) => meaning we will have 16 images each is (256,256)
-    split_images = view_as_windows(image, window_shape=(256, 256), step=256)
-
-    # we use a 4-d shape because that's what our model takes
-
-    split_images = np.reshape(split_images, (16, 256, 256, 1))
-    y_pred = np.zeros((16, 256, 256, 1))
+    # image = image_resize(test_images[random_index], d_size=1024)
+    # # mask = image_resize(test_masks[random_index], d_size=1024)
+    #
+    # # splitting an image into (4,4,256,256) => meaning we will have 16 images each is (256,256)
+    # split_images = view_as_windows(image, window_shape=(256, 256), step=256)
+    #
+    # # we use a 4-d shape because that's what our model takes
+    #
+    # split_images = np.reshape(split_images, (16, 256, 256, 1))
+    # y_pred = np.zeros((16, 256, 256, 1))
 
     # we predict a mask for each patch
-
+    split_images, new_shape = patches_for_prediction(test_images[random_index])
     y_pred = model.predict(x=split_images, verbose=1, use_multiprocessing=True)
-
-    y_pred = np.reshape(y_pred, (4, 4, 256, 256))
-
-    pred = np.zeros((1024, 1024))
-    h, w = 256, 256
-    for i in range(y_pred.shape[0]):
-        for j in range(y_pred.shape[1]):
-            pred[i * h:(i + 1) * h, j * w:(j + 1) * w] = y_pred[i][j]
+    pred = repatch_prediction(y_pred, new_shape)
 
     print_time(s_time=start_time, msg="done predicting mask")
 
@@ -201,14 +193,14 @@ def test():
     # unpatchfying that predictions into one image
     print("writing the images to the predictions folder")
     pred = (pred * 255).astype(np.uint8)
-    # _, image_pred = cv2.threshold(pred, 0, 255, cv2.THRESH_BINARY
-    #                               | cv2.THRESH_OTSU)
+    _, image_pred = cv2.threshold(pred, 0, 255, cv2.THRESH_BINARY
+                                  | cv2.THRESH_OTSU)
     # image_pred = cv2.adaptiveThreshold(pred, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
     #                                    cv2.THRESH_BINARY_INV, 7, 0)
     # kernel = np.ones((3, 3), np.uint8)
     # image_pred = cv2.morphologyEx(image_pred, cv2.MORPH_CLOSE, kernel)
-    image_pred = pred.copy()
-    image_pred[pred > 0.5] = 255
+    # image_pred = pred.copy()
+    # image_pred[pred > 0.5] = 255
     image_pred = crop_image(image_pred)
     cv2.imwrite(TEST_PREDS_PATH + str(random_index) + f"_{model_name}.png", image_pred)
 
@@ -230,4 +222,4 @@ def test():
 
 
 if __name__ == "__main__":
-    test()
+    train()
