@@ -22,14 +22,14 @@ def summarize_diagnostics(history, model_record):
     :returns model_record: updated dictionary with the relevant data.
     """
     f, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 4))
-    t = f.suptitle('augmented without flipping by 45 and 90 degrees', fontsize=12)
+    t = f.suptitle('Performance with augmentation - 50 epochs', fontsize=12)
     # f.subplots_adjust(top=0.85, wspace=0.3)
 
     max_epoch = len(history.history['accuracy']) + 1
     epoch_list = list(range(1, max_epoch))
     ax1.plot(epoch_list, history.history['accuracy'], label='Train Accuracy')
     ax1.plot(epoch_list, history.history['val_accuracy'], label='Validation Accuracy')
-    ax1.set_xticks(np.arange(1, max_epoch, 2))
+    ax1.set_xticks(np.arange(1, max_epoch, 5))
     ax1.set_ylabel('Accuracy Value')
     ax1.set_xlabel('Epoch')
     ax1.set_title('Accuracy')
@@ -37,7 +37,7 @@ def summarize_diagnostics(history, model_record):
 
     ax2.plot(epoch_list, history.history['loss'], label='Train Loss')
     ax2.plot(epoch_list, history.history['val_loss'], label='Validation Loss')
-    ax2.set_xticks(np.arange(1, max_epoch, 2))
+    ax2.set_xticks(np.arange(1, max_epoch, 5))
     ax2.set_ylabel('Loss Value')
     ax2.set_xlabel('Epoch')
     ax2.set_title('Loss')
@@ -120,7 +120,7 @@ def train():
 
     # For evaluating the model
     callbacks = [
-        # tf.keras.callbacks.EarlyStopping(patience=2, monitor='val_loss'),
+        tf.keras.callbacks.EarlyStopping(patience=25, monitor='val_loss'),
         tf.keras.callbacks.TensorBoard(log_dir=f'logs/logs_{model_name}')
     ]
 
@@ -128,9 +128,9 @@ def train():
     history = model.fit(
         x=x_train,
         y=y_train,
-        batch_size=10,
+        batch_size=24,
         verbose=1,
-        epochs=20,
+        epochs=250,
         validation_data=(x_val, y_val),
         callbacks=callbacks
     )
@@ -158,56 +158,65 @@ def test():
     """
     start_time = time()
     models_records = pd.read_csv(RECORDS_FILE)
-    model_name: str = models_records["name"][12]  # a model name to run - in csv file index - 2
+    model_name: str = models_records["name"][8]  # a model name to run - in csv file index - 2
 
     print("Loading the model")
     model = load_model(f'trained_models/{model_name}.h5')
     print("Finished Loading the model")
-    random_index = 5  # random.randint(0, 4)
+    # random_index = 3  # random.randint(0, 4)
     test_images = load_images(TEST_IMAGES_PATH)
     test_masks = load_images(TEST_MASKS_PATH)
+    for index in range(test_images.__len__()):
+        print(f"predicting a mask for a test image with index {index}")
 
-    print(f"predicting a mask for a test image with index {random_index}")
+        # image = image_resize(test_images[random_index], d_size=1024)
+        # # mask = image_resize(test_masks[random_index], d_size=1024)
+        #
+        # # splitting an image into (4,4,256,256) => meaning we will have 16 images each is (256,256)
+        # split_images = view_as_windows(image, window_shape=(256, 256), step=256)
+        #
+        # # we use a 4-d shape because that's what our model takes
+        #
+        # split_images = np.reshape(split_images, (16, 256, 256, 1))
+        # y_pred = np.zeros((16, 256, 256, 1))
 
-    # image = image_resize(test_images[random_index], d_size=1024)
-    # # mask = image_resize(test_masks[random_index], d_size=1024)
+        # we predict a mask for each patch
+        split_images, new_shape = patches_for_prediction(test_images[index])
+        y_pred = model.predict(x=split_images, verbose=1, use_multiprocessing=True)
+        pred = repatch_prediction(y_pred, new_shape)
+
+        print_time(s_time=start_time, msg="done predicting mask")
+
+        # unpatchfying that predictions into one image
+        print("writing the images to the predictions folder")
+        pred = (pred * 255).astype(np.uint8)
+        # histogram, bin_edges = np.histogram(pred, bins=5)
+
+        th, image_pred = cv2.threshold(pred, 0, 255, cv2.THRESH_BINARY
+                                       | cv2.THRESH_OTSU)
+        # image_pred = cv2.adaptiveThreshold(pred, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+        #                                    cv2.THRESH_BINARY_INV, 7, 0)
+        # kernel = np.ones((3, 3), np.uint8)
+        # image_pred = cv2.morphologyEx(image_pred, cv2.MORPH_CLOSE, kernel)
+        # image_pred = pred.copy()
+        # image_pred[pred > 0.5] = 255
+        image_pred = crop_image(image_pred)
+        cv2.imwrite(TEST_PREDS_PATH + str(index) + f"_{model_name}.png", image_pred)
+
+    # display(test_images[random_index], 'Original Image')
+    # # display(test_masks[random_index], 'Ground truth Mask')
+    # display(image_pred, 'Prediction')
+
+    # configure and draw the histogram figure
+    # plt.figure()
+    # plt.title("Grayscale Histogram")
+    # plt.xlabel("grayscale value")
+    # plt.ylabel("pixels")
+    # plt.xlim([0.0, 255.0])  # <- named arguments do not work here
+    # plt.ylim([0.0, 100000.0])  # <- named arguments do not work here
     #
-    # # splitting an image into (4,4,256,256) => meaning we will have 16 images each is (256,256)
-    # split_images = view_as_windows(image, window_shape=(256, 256), step=256)
-    #
-    # # we use a 4-d shape because that's what our model takes
-    #
-    # split_images = np.reshape(split_images, (16, 256, 256, 1))
-    # y_pred = np.zeros((16, 256, 256, 1))
-
-    # we predict a mask for each patch
-    split_images, new_shape = patches_for_prediction(test_images[random_index])
-    y_pred = model.predict(x=split_images, verbose=1, use_multiprocessing=True)
-    pred = repatch_prediction(y_pred, new_shape)
-
-    print_time(s_time=start_time, msg="done predicting mask")
-
-    if not os.path.exists(TEST_PREDS_PATH):
-        os.makedirs(TEST_PREDS_PATH)
-
-    # unpatchfying that predictions into one image
-    print("writing the images to the predictions folder")
-    pred = (pred * 255).astype(np.uint8)
-    _, image_pred = cv2.threshold(pred, 0, 255, cv2.THRESH_BINARY
-                                  | cv2.THRESH_OTSU)
-    # image_pred = cv2.adaptiveThreshold(pred, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
-    #                                    cv2.THRESH_BINARY_INV, 7, 0)
-    # kernel = np.ones((3, 3), np.uint8)
-    # image_pred = cv2.morphologyEx(image_pred, cv2.MORPH_CLOSE, kernel)
-    # image_pred = pred.copy()
-    # image_pred[pred > 0.5] = 255
-    image_pred = crop_image(image_pred)
-    cv2.imwrite(TEST_PREDS_PATH + str(random_index) + f"_{model_name}.png", image_pred)
-
-    display(test_images[random_index], 'Original Image')
-    # display(test_masks[random_index], 'Ground truth Mask')
-    display(image_pred, 'Prediction')
-
+    # plt.plot(bin_edges[0:-1], histogram)  # <- or here
+    # plt.show()
     """
     plt.subplot(131), plt.imshow(test_images[random_index], cmap='gray'), plt.title('Original Image')
     plt.xticks([]), plt.yticks([])

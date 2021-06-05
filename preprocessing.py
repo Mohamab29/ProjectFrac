@@ -85,4 +85,4 @@ def load_images(path, re_size=False):
 
         images.append(image)
     print_time(s_time, f"done loading images from {folder_name} folder")
-    return np.asarray(images)  # dtype="object"
+    return images  # dtype="object"

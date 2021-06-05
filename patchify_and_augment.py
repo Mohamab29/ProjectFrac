@@ -200,13 +200,14 @@ def augment(images, masks):
     """
     # creating lists that will contain all the augmented images and masks
     augmented_images, augmented_masks = [], []
-    num_of_images = images.shape[0]
+    num_of_images = images.__len__()
     rand_num = 0
     for inx in tqdm(range(num_of_images), total=num_of_images):
 
         # first we add the original image and mask
-        augmented_images.append(images[inx])
-        augmented_masks.append(masks[inx])
+        if np.random.random() > 0.7:
+            augmented_images.append(images[inx])
+            augmented_masks.append(masks[inx])
 
         # first augmentation for them both ,
         # temp1 = is an augmented image , temp2 = is augmented mask .
@@ -214,17 +215,16 @@ def augment(images, masks):
         # temp1, temp2 = choose_(images[inx], masks[inx], rand_num_=rand_num)
         # augmented_images.append(temp1)
         # augmented_masks.append(temp2)
-
-        # add more images if lucky
-        if np.random.random() <= 0.5:
+        if 0.4 < np.random.random() <= 0.7:
             # rand_num = randomize(rand_num)
-            temp1, temp2 = cv2.flip(images[inx], 1), cv2.flip(masks[inx], 1)
+            temp1, temp2 = cv2.flip(images[inx], -1), cv2.flip(masks[inx], -1)
             augmented_images.append(temp1)
             augmented_masks.append(temp2)
 
-        if np.random.random() > 0.5:
+        # add more images if lucky
+        if np.random.random() <= 0.4:
             # rand_num = randomize(rand_num)
-            temp1, temp2 = cv2.flip(images[inx], -1), cv2.flip(masks[inx], -1)
+            temp1, temp2 = cv2.flip(images[inx], 1), cv2.flip(masks[inx], 1)
             augmented_images.append(temp1)
             augmented_masks.append(temp2)
 
@@ -244,11 +244,11 @@ def patch_making():
 
     # if we want to augment
     augmented_images, augmented_masks = augment(loaded_images, loaded_masks)
+    len_images = augmented_images.shape[0]
 
     # No Augmentation
     # augmented_images, augmented_masks = loaded_images, loaded_masks
-
-    len_images = augmented_images.shape[0]
+    # len_images = augmented_images.__len__()
 
     print_time(start_time, f"done augmenting images and masks")
 
@@ -257,9 +257,9 @@ def patch_making():
     # making patches from each image and mask and scaling them to 1-0
     number_of_patches = 0
     for inx in tqdm(range(len_images), total=len_images):
-        image_patched = create_patches(augmented_images[inx])
+        image_patched = create_patches(augmented_images[inx], stride=72)
         # we take a mask then we threshold it in order to have only 255 and 0 values,
-        mask_patched = create_patches(threshold_(augmented_masks[inx]))
+        mask_patched = create_patches(threshold_(augmented_masks[inx]), stride=72)
         number_of_patches += image_patched.shape[0]  # this is just to count how many patches we created
         for i in range(image_patched.shape[0]):
             images_patches.append(image_patched[i].copy() / 255)
