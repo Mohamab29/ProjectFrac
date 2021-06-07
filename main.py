@@ -22,7 +22,7 @@ def summarize_diagnostics(history, model_record):
     :returns model_record: updated dictionary with the relevant data.
     """
     f, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 4))
-    t = f.suptitle('Performance with augmentation - 50 epochs', fontsize=12)
+    t = f.suptitle('Hand-made and regular masks Performance with augmentation - at least 50 epochs', fontsize=11)
     # f.subplots_adjust(top=0.85, wspace=0.3)
 
     max_epoch = len(history.history['accuracy']) + 1
@@ -120,7 +120,7 @@ def train():
 
     # For evaluating the model
     callbacks = [
-        tf.keras.callbacks.EarlyStopping(patience=25, monitor='val_loss'),
+        tf.keras.callbacks.EarlyStopping(patience=8, monitor='val_loss'),
         tf.keras.callbacks.TensorBoard(log_dir=f'logs/logs_{model_name}')
     ]
 
@@ -130,7 +130,7 @@ def train():
         y=y_train,
         batch_size=24,
         verbose=1,
-        epochs=250,
+        epochs=50,
         validation_data=(x_val, y_val),
         callbacks=callbacks
     )
