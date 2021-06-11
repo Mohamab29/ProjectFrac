@@ -158,7 +158,7 @@ def test():
     """
     start_time = time()
     models_records = pd.read_csv(RECORDS_FILE)
-    model_name: str = models_records["name"][8]  # a model name to run - in csv file index - 2
+    model_name: str = models_records["name"][24]  # a model name to run - in csv file index - 2
 
     print("Loading the model")
     model = load_model(f'trained_models/{model_name}.h5')
@@ -192,15 +192,33 @@ def test():
         pred = (pred * 255).astype(np.uint8)
         # histogram, bin_edges = np.histogram(pred, bins=5)
 
-        th, image_pred = cv2.threshold(pred, 0, 255, cv2.THRESH_BINARY
-                                       | cv2.THRESH_OTSU)
-        # image_pred = cv2.adaptiveThreshold(pred, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
-        #                                    cv2.THRESH_BINARY_INV, 7, 0)
-        # kernel = np.ones((3, 3), np.uint8)
-        # image_pred = cv2.morphologyEx(image_pred, cv2.MORPH_CLOSE, kernel)
+        th, image_pred = cv2.threshold(pred, 0, 255, cv2.THRESH_BINARY+cv2.THRESH_OTSU)
+        #
+        # # image_pred = cv2.adaptiveThreshold(pred, 255, cv2.ADAPTIVE_THRESH_GAUSSIAN_C,
+        # #                                    cv2.THRESH_BINARY_INV, 7, 0)
+        # # kernel = np.ones((3, 3), np.uint8)
+        # # image_pred = cv2.morphologyEx(image_pred, cv2.MORPH_CLOSE, kernel)
+        # image_pred = cv2.medianBlur(image_pred, 1)
+        # th, image_pred = cv2.threshold(image_pred, 0, 255, cv2.THRESH_BINARY)
+
+        image_pred = crop_image(image_pred)
+        # contours, hierarchy = cv2.findContours(image_pred, cv2.RETR_CCOMP,
+        #                                        cv2.CHAIN_APPROX_SIMPLE)  # Use cv2.CCOMP for two level hierarchy
+        # mask = np.zeros(image_pred.shape, dtype=np.uint8)
+        # for i, cnt in enumerate(contours):
+        #     # if the contour has no other contours inside of it
+        #     if cv2.contourArea(cnt) > 300:
+        #         # if hierarchy[0][i][3] == -1:  # basically look for holes
+        #         # if the size of the contour is less than a threshold (noise)
+        #
+        #         # Fill the holes in the original image
+        #         cv2.drawContours(mask, [cnt], 0, 255, 2)
+            # image_pred = cv2.dilate(image_pred, kernel, iterations=1)
         # image_pred = pred.copy()
         # image_pred[pred > 0.5] = 255
-        image_pred = crop_image(image_pred)
+        # mask = crop_image(mask)
+        # mask = crop_image(mask)
+
         cv2.imwrite(TEST_PREDS_PATH + str(index) + f"_{model_name}.png", image_pred)
 
     # display(test_images[random_index], 'Original Image')
@@ -231,4 +249,4 @@ def test():
 
 
 if __name__ == "__main__":
-    train()
+    test()

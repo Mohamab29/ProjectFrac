@@ -96,6 +96,22 @@ def evaluate_models():
             # histogram, bin_edges = np.histogram(pred, bins=5)
             th, image_pred = cv2.threshold(pred, 0, 255, cv2.THRESH_BINARY
                                            | cv2.THRESH_OTSU)
+            # image_pred = crop_image(image_pred)
+            # contours, hierarchy = cv2.findContours(image_pred, cv2.RETR_CCOMP,
+            #                                        cv2.CHAIN_APPROX_SIMPLE)  # Use cv2.CCOMP for two level hierarchy
+            # mask = np.zeros(image_pred.shape, dtype=np.uint8)
+            # for i, cnt in enumerate(contours):
+            #     # if the contour has no other contours inside of it
+            #     if cv2.contourArea(cnt) > 500:
+            #         # if hierarchy[0][i][3] == -1:  # basically look for holes
+            #         # if the size of the contour is less than a threshold (noise)
+            #
+            #         # Fill the holes in the original image
+            #         cv2.drawContours(mask, [cnt], 0, 255, 2)
+            #     # image_pred = cv2.dilate(image_pred, kernel, iterations=1)
+            # # image_pred = pred.copy()
+            # # image_pred[pred > 0.5] = 255
+            # mask = crop_image(mask)
             image_pred = crop_image(image_pred)
             image_pred = resize_image(image_pred, test_masks[index])
             jac_sim = jaccard_similarity(image_pred, test_masks[index])
